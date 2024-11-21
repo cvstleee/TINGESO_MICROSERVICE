@@ -27,6 +27,11 @@
     <module>
       microservice-config
     </module>
+    <module>microservice-user
+    </module>
+    <module>
+      microservice-calculations
+    </module>
   </modules>
 
   <properties>
