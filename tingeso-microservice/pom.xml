@@ -32,6 +32,15 @@
     <module>
       microservice-calculations
     </module>
+    <module>
+      microservice-creditRequest
+    </module>
+    <module>
+      microservice-tracking
+    </module>
+    <module>
+      microservice-creditEvaluation
+    </module>
   </modules>
 
   <properties>

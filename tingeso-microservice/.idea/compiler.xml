@@ -8,10 +8,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="microservice-gateway" />
+        <module name="microservice-config" />
         <module name="microservice-user" />
         <module name="microservice-eureka" />
-        <module name="microservice-config" />
+        <module name="microservice-creditRequest" />
+        <module name="microservice-creditEvaluation" />
         <module name="microservice-calculations" />
+        <module name="microservice-tracking" />
       </profile>
     </annotationProcessing>
   </component>
@@ -19,8 +22,11 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="microservice-calculations" options="-parameters" />
       <module name="microservice-config" options="-parameters" />
+      <module name="microservice-creditEvaluation" options="-parameters" />
+      <module name="microservice-creditRequest" options="-parameters" />
       <module name="microservice-eureka" options="-parameters" />
       <module name="microservice-gateway" options="-parameters" />
+      <module name="microservice-tracking" options="-parameters" />
       <module name="microservice-user" options="-parameters" />
     </option>
   </component>
