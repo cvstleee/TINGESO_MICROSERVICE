@@ -1,4 +1,4 @@
-package com.tingeso.tingeso.entities;
+package com.microservice.creditEvaluation.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,26 +31,7 @@ public class CreditEvaluationEntity {
     private boolean savingsCapacity;
     //juntar con credit request
     private String statusEvaluation;
-
-    //todas son uno a uno
-    //unido al creditRequest (x el maxamount)
-    //unido al costumner (x la edad)
-    //unido al saving por el savings capacity
-
-    @OneToOne
-    @JoinColumn(name = "costumer_id" , referencedColumnName = "id")
-    @JsonIgnore
-    private CostumerEntity costumer;
-
-    @OneToOne
-    @JsonIgnore
-    @JoinColumn(name = "creditRequest_id" , referencedColumnName = "id")
-    private CreditRequestEntity creditRequest;
-
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name="employee_id")
-    private EmployeeEntity employee;
-
+    //pq la id costumer y employee ya lo tiene el credit request
+    private Long idCreditRequest;
 
 }

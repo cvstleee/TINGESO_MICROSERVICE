@@ -1,7 +1,6 @@
-package com.tingeso.tingeso.repositories;
+package com.microservice.creditEvaluation.repository;
 
-import com.tingeso.tingeso.DTO.CreditEvaluation;
-import com.tingeso.tingeso.entities.CreditEvaluationEntity;
+import com.microservice.creditEvaluation.entity.CreditEvaluationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

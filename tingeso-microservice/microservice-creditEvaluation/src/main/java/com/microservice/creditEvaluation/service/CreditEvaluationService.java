@@ -1,10 +1,8 @@
-package com.tingeso.tingeso.servicies;
+package com.microservice.creditEvaluation.service;
 
-import com.tingeso.tingeso.DTO.CreditEvaluation;
-import com.tingeso.tingeso.entities.CreditEvaluationEntity;
-import com.tingeso.tingeso.entities.CreditRequestEntity;
-import com.tingeso.tingeso.repositories.CreditEvaluationRepository;
-import com.tingeso.tingeso.repositories.CreditRequestRepository;
+
+import com.microservice.creditEvaluation.entity.CreditEvaluationEntity;
+import com.microservice.creditEvaluation.repository.CreditEvaluationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +13,15 @@ import java.util.Optional;
 public class CreditEvaluationService {
     @Autowired
     CreditEvaluationRepository creditEvaluationRepository;
-    @Autowired
-    CreditRequestRepository creditRequestRepository;
+    //@Autowired
+    //CreditRequestRepository creditRequestRepository;
 
     public List<CreditEvaluationEntity> getCreditEvaluations() {
         return creditEvaluationRepository.findAll();
     }
 
-    public CreditEvaluationEntity saveCreditEvaluation(CreditEvaluation creditEvaluation) {
+    //ya no necesito hacer los setters pq dejé de trabajar con relaciones de JPA
+    /**public CreditEvaluationEntity saveCreditEvaluation(CreditEvaluationEntity creditEvaluation) {
         System.out.println(creditEvaluation);
         CreditEvaluationEntity creditEvaluationEntity = new CreditEvaluationEntity();
         Optional<CreditRequestEntity> creditRequestEntity = creditRequestRepository.findById(creditEvaluation.getCreditRequestId());
@@ -44,7 +43,7 @@ public class CreditEvaluationService {
         creditEvaluationEntity.setRelationshipFeeIncome(creditEvaluation.isRelationshipFeeIncome());
 
         return creditEvaluationRepository.save(creditEvaluationEntity);
-    }
+    }**/
 
     public CreditEvaluationEntity getById(Long id){
         return creditEvaluationRepository.findById(id).get();

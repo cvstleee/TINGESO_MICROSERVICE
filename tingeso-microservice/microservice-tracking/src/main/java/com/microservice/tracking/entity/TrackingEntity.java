@@ -15,12 +15,6 @@ public class TrackingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Long id;
-    private int administrationFee;
-    private int monthCost;
-    private int totalCost;
-    private double interestRateMonth;
-    private int lifeInsurance;
-    private int fireInsurance;
-    //enlazado a una solicitud de crédito
-    private Long idCreditRequest;
+    //podría dejar acá el estado?
+    //id del credit request + evaluation?
 }

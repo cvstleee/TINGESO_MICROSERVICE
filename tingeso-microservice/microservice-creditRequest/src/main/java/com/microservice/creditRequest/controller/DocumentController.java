@@ -1,8 +1,7 @@
-package com.tingeso.tingeso.controllers;
-
-import com.tingeso.tingeso.DTO.Document;
-import com.tingeso.tingeso.entities.DocumentEntity;
-import com.tingeso.tingeso.servicies.DocumentService;
+package com.microservice.creditRequest.controller;
+import com.microservice.creditRequest.DTO.Document;
+import com.microservice.creditRequest.entity.DocumentEntity;
+import com.microservice.creditRequest.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

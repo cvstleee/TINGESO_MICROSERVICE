@@ -1,8 +1,6 @@
-package com.tingeso.tingeso.controllers;
-
-import com.tingeso.tingeso.DTO.CreditEvaluation;
-import com.tingeso.tingeso.entities.CreditEvaluationEntity;
-import com.tingeso.tingeso.servicies.CreditEvaluationService;
+package com.microservice.creditEvaluation.controller;
+import com.microservice.creditEvaluation.entity.CreditEvaluationEntity;
+import com.microservice.creditEvaluation.service.CreditEvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +26,10 @@ public class CreditEvaluationController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<CreditEvaluationEntity> saveCreditEvaluation(@RequestBody CreditEvaluation creditEvaluation) {
+    /**public ResponseEntity<CreditEvaluationEntity> saveCreditEvaluation(@RequestBody CreditEvaluation creditEvaluation) {
         CreditEvaluationEntity creditEvaluationNew = creditEvaluationService.saveCreditEvaluation(creditEvaluation);
         return ResponseEntity.ok(creditEvaluationNew);
-    }
+    }**/
 
     @PutMapping("/")
     public ResponseEntity<CreditEvaluationEntity> updateCreditEvaluation(@RequestBody CreditEvaluationEntity creditEvaluation) {

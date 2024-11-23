@@ -25,7 +25,8 @@ public class CostumerEntity {
     private int monthlyIncome;
     //Relaciones sin usar relaciones
     //private Long idCreditEvaluation;
-    private List<Long> idCreditRequests = new ArrayList<>();
+    //mejor hago un findById costumer en el credit Request
+    //private List<Long> idCreditRequests = new ArrayList<>();
 
     //@OneToOne(mappedBy = "costumer")
     //@JsonIgnore

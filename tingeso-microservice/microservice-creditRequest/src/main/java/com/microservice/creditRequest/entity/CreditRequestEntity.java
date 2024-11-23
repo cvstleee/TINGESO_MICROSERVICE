@@ -26,8 +26,6 @@ public class CreditRequestEntity {
     private String type;
     //monto del prestamo
     private int creditAmount;
-    //cuota mensual del préstamo, se calcula con la formula del simulation (NO SE RECIBE DEL CLIENTE)
-    private int monthDebth;
     //plazo, lo indica el ejecutivo según el máximo dispo en la tabla
     private int deadline; //plazo en meses, si son 20 años 240 meses
     //ejecutivo lo indica según tabla
