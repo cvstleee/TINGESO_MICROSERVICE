@@ -39,8 +39,8 @@ public class CreditRequestService {
     }
 
     //Comunicación con microservicio user, ese manda la id
-    public List<CreditRequestEntity> findByIdCostumer(Long idCostumer){
-        return creditRequestRepository.findByCostumer(idCostumer);
-    }
+   // public List<CreditRequestEntity> findByIdCostumer(Long idCostumer){
+     //   return creditRequestRepository.findByCostumer(idCostumer);
+    //}
 
 }

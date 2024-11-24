@@ -29,8 +29,6 @@ public class CreditEvaluationEntity {
     private boolean relationshipDebtIncome;
     //private boolean maxAmount;
     private boolean savingsCapacity;
-    //juntar con credit request
-    private String statusEvaluation;
     //pq la id costumer y employee ya lo tiene el credit request
     private Long idCreditRequest;
 

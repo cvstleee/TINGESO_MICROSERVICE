@@ -26,10 +26,10 @@ public class CreditEvaluationController {
     }
 
     @PostMapping("/")
-    /**public ResponseEntity<CreditEvaluationEntity> saveCreditEvaluation(@RequestBody CreditEvaluation creditEvaluation) {
+    public ResponseEntity<CreditEvaluationEntity> saveCreditEvaluation(@RequestBody CreditEvaluationEntity creditEvaluation) {
         CreditEvaluationEntity creditEvaluationNew = creditEvaluationService.saveCreditEvaluation(creditEvaluation);
         return ResponseEntity.ok(creditEvaluationNew);
-    }**/
+    }
 
     @PutMapping("/")
     public ResponseEntity<CreditEvaluationEntity> updateCreditEvaluation(@RequestBody CreditEvaluationEntity creditEvaluation) {

@@ -15,6 +15,7 @@ public class TrackingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Long id;
-    //podría dejar acá el estado?
-    //id del credit request + evaluation?
+    private Long idCreditRequest;
+    private Long idCreditEvaluation;
+    private String statusEvaluation;
 }

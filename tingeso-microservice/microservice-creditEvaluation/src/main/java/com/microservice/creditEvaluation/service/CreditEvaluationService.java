@@ -13,37 +13,19 @@ import java.util.Optional;
 public class CreditEvaluationService {
     @Autowired
     CreditEvaluationRepository creditEvaluationRepository;
-    //@Autowired
-    //CreditRequestRepository creditRequestRepository;
 
     public List<CreditEvaluationEntity> getCreditEvaluations() {
         return creditEvaluationRepository.findAll();
     }
 
     //ya no necesito hacer los setters pq dejé de trabajar con relaciones de JPA
-    /**public CreditEvaluationEntity saveCreditEvaluation(CreditEvaluationEntity creditEvaluation) {
-        System.out.println(creditEvaluation);
-        CreditEvaluationEntity creditEvaluationEntity = new CreditEvaluationEntity();
-        Optional<CreditRequestEntity> creditRequestEntity = creditRequestRepository.findById(creditEvaluation.getCreditRequestId());
-        if(creditRequestEntity.isEmpty()) {
-            return null;
-        }
-        if(existCreditRequestById(creditEvaluation.getCreditRequestId())){
+    public CreditEvaluationEntity saveCreditEvaluation(CreditEvaluationEntity creditEvaluation) {
+        if(existCreditRequestById(creditEvaluation.getIdCreditRequest())){
             System.out.print("YA EXISTE");
             return null;
         }
-
-        creditEvaluationEntity.setCreditRequest(creditRequestEntity.get());
-        creditEvaluationEntity.setAppropiateAge(creditEvaluation.isAppropiateAge());
-        creditEvaluationEntity.setAntiquity(creditEvaluation.isAntiquity());
-        creditEvaluationEntity.setStatusEvaluation(creditEvaluation.getStatusEvaluation());
-        creditEvaluationEntity.setSavingsCapacity(creditEvaluation.isSavingsCapacity());
-        creditEvaluationEntity.setHistoryDICOM(creditEvaluation.isHistoryDICOM());
-        creditEvaluationEntity.setRelationshipDebtIncome(creditEvaluation.isRelationshipDebtIncome());
-        creditEvaluationEntity.setRelationshipFeeIncome(creditEvaluation.isRelationshipFeeIncome());
-
-        return creditEvaluationRepository.save(creditEvaluationEntity);
-    }**/
+        return creditEvaluationRepository.save(creditEvaluation);
+    }
 
     public CreditEvaluationEntity getById(Long id){
         return creditEvaluationRepository.findById(id).get();
@@ -54,7 +36,7 @@ public class CreditEvaluationService {
     }
 
     public boolean existCreditRequestById(Long id){
-        if(creditEvaluationRepository.existsByCreditRequestId(id)){
+        if(creditEvaluationRepository.existsByidCreditRequest(id)){
             return true;
         }else{
             return false;

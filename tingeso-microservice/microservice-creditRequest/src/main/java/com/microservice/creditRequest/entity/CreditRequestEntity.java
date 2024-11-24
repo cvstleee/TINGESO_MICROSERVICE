@@ -32,6 +32,6 @@ public class CreditRequestEntity {
     private double interestRateYear; //anual
     private Long idCostumer;
     private Long idEmployee;
-    private List<Long> idDocuments;
+    //private List<Long> idDocuments;
     private Long idCreditEvaluation;
 }

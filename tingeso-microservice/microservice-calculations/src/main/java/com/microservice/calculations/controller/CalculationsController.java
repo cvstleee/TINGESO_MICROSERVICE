@@ -79,9 +79,9 @@ public class CalculationsController {
         //esto lo saco de la credit request, tendría que comunicar este microservicio con el de credit request
         //capaz no sea necesario, porque con esto SOBREESCRIBIA lo que ya existia en el credit request
         //y si en vez de sobreescribirlo lo extraigo?
-        calculation.setDeadline(termInYears * 12);
-        calculation.setCreditAmount(loanAmount);
-        calculation.setInterestRateYear(anualInterestRate);
+        //calculation.setDeadline(termInYears * 12);
+        //calculation.setCreditAmount(loanAmount);
+        //calculation.setInterestRateYear(anualInterestRate);
 
         double monthlyInterestRate = (anualInterestRate / 100) / 12;
         calculation.setInterestRateMonth(monthlyInterestRate);
