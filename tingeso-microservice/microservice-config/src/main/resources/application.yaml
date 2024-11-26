@@ -7,6 +7,6 @@ spring:
         git:
           default-label: main
           uri: https://github.com/cvstleee/TINGESO_MICROSERVICE
-          search-paths: "config-data"
+          search-paths: config-data
   application:
     name: microservice-config
