@@ -1,24 +1,14 @@
-server:
-  port: 8092
-
 spring:
   application:
     name: microservice-creditEvaluation
-  config:
-    import: optional:configserver:http://localhost:8888
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8081
   datasource:
     url: jdbc:postgresql://localhost:5432/creditevaluationprestabancodb
     username: postgres
     password: 1234
   jpa:
     hibernate:
-      ddl-auto: create
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+      ddl-auto: update
