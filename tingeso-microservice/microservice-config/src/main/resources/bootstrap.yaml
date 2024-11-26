@@ -1,8 +1,6 @@
 server:
   port: 8081
 spring:
-  application:
-    name: microservice-config
   cloud:
     config:
       server:
@@ -10,3 +8,5 @@ spring:
           default-label: main
           uri: https://github.com/cvstleee/TINGESO_MICROSERVICE
           search-paths: "config-data"
+  application:
+    name: microservice-config
