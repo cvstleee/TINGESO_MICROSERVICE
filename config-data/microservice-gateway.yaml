@@ -17,11 +17,14 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: microservice-user
-          uri: lb://microservice-user
+        - id: microservice-employee
+          uri: lb://microservice-user  # Nombre del microservicio donde está el controlador
+          predicates:
+            - Path=/employee/**
+        - id: microservice-costumer
+          uri: lb://microservice-user  # Mismo microservicio, pero diferente ruta
           predicates:
             - Path=/costumer/**
-            - Path=/employee/**
         - id: microservice-creditRequest
           uri: lb://microservice-creditRequest
           predicates:
