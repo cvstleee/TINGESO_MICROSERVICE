@@ -33,13 +33,13 @@ public class DocumentController {
     public ResponseEntity<DocumentEntity> saveDocument(@RequestParam("file") MultipartFile file,
                                                        @RequestParam("type") String type,
                                                        @RequestParam("title") String title,
-                                                       @RequestParam("creditRequestId") Long creditRequestId) {
+                                                       @RequestParam("idCreditRequest") Long idCreditRequest) {
         try {
             // Crear un objeto Document y establecer sus propiedades
             Document document = new Document();
             document.setType(type);
             document.setTitle(title);
-            document.setCreditRequestId(creditRequestId); // Establecer el ID de la solicitud de crédito
+            document.setIdCreditRequest(idCreditRequest); // Establecer el ID de la solicitud de crédito
 
             // Guardar el contenido del archivo en el objeto Document (si es necesario)
             document.setFile(file.getBytes()); // Asegúrate de que tu clase Document tenga un campo para esto

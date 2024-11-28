@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import documentService from '../services/document.service';
 
-const DocumentUpload = ({ creditRequestId }) => {
+const DocumentUpload = ({ idCreditRequest }) => {
     const [files, setFiles] = useState([]);
     const [type, setType] = useState(''); // Estado para el tipo de documento
     const [title, setTitle] = useState(''); // Estado para el título del documento
@@ -23,7 +23,7 @@ const DocumentUpload = ({ creditRequestId }) => {
         // Agrega tipo, título y ID de la solicitud de crédito
         formData.append('type', type);
         formData.append('title', title);
-        formData.append('creditRequestId', creditRequestId); // Este es para asociar con la solicitud
+        formData.append('idCreditRequest', idCreditRequest); // Este es para asociar con la solicitud
     
         try {
             const result = await documentService.create(formData); // Llama al servicio create con formData

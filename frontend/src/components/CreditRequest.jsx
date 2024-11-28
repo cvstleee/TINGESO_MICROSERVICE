@@ -173,7 +173,7 @@ const CreditRequest = () => {
                      ))}
                     
                      {/* Aquí se pasa el ID de la solicitud guardada al componente DocumentUpload */}
-                     <DocumentUpload creditRequestId={savedRequest.id} />
+                     <DocumentUpload idCreditRequest={savedRequest.id} />
                  </div>
              )}
          </div>

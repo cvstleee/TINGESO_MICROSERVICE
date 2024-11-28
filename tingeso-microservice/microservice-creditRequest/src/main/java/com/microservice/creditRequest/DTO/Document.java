@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class Document {
-    private Long creditRequestId;
+    private Long idCreditRequest;
     private String title;
     private String type;
     @Lob

@@ -24,13 +24,9 @@ public class DocumentService {
 
     public DocumentEntity saveDocument(Document document){
         DocumentEntity documentEntity = new DocumentEntity();
-        Optional<CreditRequestEntity> creditRequestEntity = creditRequestRepository.findById(document.getCreditRequestId());
-        if (creditRequestEntity.isEmpty()){
-            return null;
-        }
 
         documentEntity.setType(document.getType());
-       // documentEntity.setCreditRequest(creditRequestEntity.get());
+        documentEntity.setIdCreditRequest(document.getIdCreditRequest());
         documentEntity.setTitle(document.getTitle());
         documentEntity.setFile(document.getFile());
 
