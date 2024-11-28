@@ -33,5 +33,5 @@ public class CreditRequestEntity {
     private Long idCostumer;
     private Long idEmployee;
     //private List<Long> idDocuments;
-    private Long idCreditEvaluation;
+    //private Long idCreditEvaluation;
 }

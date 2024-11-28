@@ -37,6 +37,10 @@ spring:
           uri: lb://microservice-creditRequest
           predicates:
             - Path=/creditRequest/**
+        - id: microservice-document
+          uri: lb://microservice-creditRequest
+          predicates:
+            - Path=/document/**
         - id: microservice-creditEvaluation
           uri: lb://microservice-creditEvaluation
           predicates:

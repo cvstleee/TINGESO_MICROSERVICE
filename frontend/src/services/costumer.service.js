@@ -20,11 +20,11 @@ const remove = id => {
     return httpClient.delete(`/costumer/${id}`);
 }
 
-const simulation = (loanAmount, anualInterestRate, termInYears) => {
+/**const simulation = (loanAmount, anualInterestRate, termInYears) => {
     const url = `/costumer/simulate?P=${loanAmount}&r=${anualInterestRate}&n=${termInYears}`;
     return httpClient.get(url); 
-};
+};**/
 
 
 
-export default { getAll, create, get, update, remove, simulation};
+export default { getAll, create, get, update, remove};

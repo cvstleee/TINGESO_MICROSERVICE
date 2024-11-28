@@ -6,8 +6,8 @@ import creditRequestService from '../services/creditRequest.service';
 
 const CreditRequest = () => {
     const [formData, setFormData] = useState({
-        costumerId: '',
-        employeeId: '',
+        idCostumer: '',
+        idEmployee: '',
         type: '',
         creditAmount: '',
         deadline: '',
@@ -66,11 +66,11 @@ const CreditRequest = () => {
             <h1>Solicitud de Crédito</h1>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="costumerId">Cliente:</label>
+                    <label htmlFor="idCostumer">Cliente:</label>
                     <select 
-                        id="costumerId" 
-                        name="costumerId" 
-                        value={formData.costumerId} 
+                        id="idCostumer" 
+                        name="idCostumer" 
+                        value={formData.idCostumer} 
                         onChange={handleChange} 
                         required 
                     >
@@ -82,11 +82,11 @@ const CreditRequest = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="employeeId">Empleado:</label>
+                    <label htmlFor="idEmployee">Empleado:</label>
                     <select 
-                        id="employeeId" 
-                        name="employeeId" 
-                        value={formData.employeeId} 
+                        id="idEmployee" 
+                        name="idEmployee" 
+                        value={formData.idEmployee} 
                         onChange={handleChange} 
                         required 
                     >
@@ -146,6 +146,7 @@ const CreditRequest = () => {
                         name="interestRateYear" 
                         value={formData.interestRateYear} 
                         onChange={handleChange} 
+                        step="0.01" // Permite valores decimales
                         required 
                     />
                 </div>
