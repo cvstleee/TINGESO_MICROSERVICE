@@ -15,7 +15,7 @@ public class CostumerController {
     //@Autowired
     //CreditSimulationService creditSimulationService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<CostumerEntity>> listCostumers() {
         List<CostumerEntity> costumer = costumerService.getCostumers();
         return ResponseEntity.ok(costumer);
@@ -27,13 +27,13 @@ public class CostumerController {
         return ResponseEntity.ok(costumer);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<CostumerEntity> saveCostumer(@RequestBody CostumerEntity costumer) {
         CostumerEntity costumerNew = costumerService.saveCostumer(costumer);
         return ResponseEntity.ok(costumerNew);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<CostumerEntity> updateCostumer(@RequestBody CostumerEntity costumer){
         CostumerEntity costumerUpdated = costumerService.updateCostumer(costumer);
         return ResponseEntity.ok(costumerUpdated);
@@ -44,14 +44,6 @@ public class CostumerController {
         var isDeleted = costumerService.deleteCostumer(id);
         return ResponseEntity.noContent().build();
     }
-
-    //este va en otro microservicio
-
-    /**@GetMapping("/simulate")
-    public int simulation(@RequestParam("P") int P, @RequestParam("r") double r, @RequestParam("n") int n) {
-        return creditSimulationService.simulationDebt(P, r, n);
-    }**/
-
 
 
 }
