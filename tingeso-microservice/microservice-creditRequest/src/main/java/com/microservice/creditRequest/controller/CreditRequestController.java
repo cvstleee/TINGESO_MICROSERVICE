@@ -47,10 +47,4 @@ public class CreditRequestController {
         return ResponseEntity.noContent().build();
     }
 
-    //endpoint para microservicio de creditRequest
-   // @GetMapping("/searchByCreditRequest/{idCreditRequest}")
-    //public ResponseEntity<?> findByIdCostumer(@PathVariable Long idCostumer) {
-      //  return ResponseEntity.ok(creditRequestService.findByIdCostumer(idCostumer));
-    //}
-
 }

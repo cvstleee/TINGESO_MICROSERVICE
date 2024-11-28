@@ -12,10 +12,8 @@ import java.util.List;
 public class CostumerController {
     @Autowired
     CostumerService costumerService;
-    //@Autowired
-    //CreditSimulationService creditSimulationService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<CostumerEntity>> listCostumers() {
         List<CostumerEntity> costumer = costumerService.getCostumers();
         return ResponseEntity.ok(costumer);
@@ -27,13 +25,13 @@ public class CostumerController {
         return ResponseEntity.ok(costumer);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<CostumerEntity> saveCostumer(@RequestBody CostumerEntity costumer) {
         CostumerEntity costumerNew = costumerService.saveCostumer(costumer);
         return ResponseEntity.ok(costumerNew);
     }
 
-    @PutMapping
+    @PutMapping("/")
     public ResponseEntity<CostumerEntity> updateCostumer(@RequestBody CostumerEntity costumer){
         CostumerEntity costumerUpdated = costumerService.updateCostumer(costumer);
         return ResponseEntity.ok(costumerUpdated);

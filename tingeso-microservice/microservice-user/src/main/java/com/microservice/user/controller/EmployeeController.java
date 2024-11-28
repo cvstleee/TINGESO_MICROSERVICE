@@ -13,7 +13,7 @@ public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<EmployeeEntity>> listEmployees(){
         List<EmployeeEntity> employee = employeeService.getEmployees();
         return ResponseEntity.ok(employee);
@@ -25,13 +25,13 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<EmployeeEntity> saveEmployee(@RequestBody EmployeeEntity employee){
         EmployeeEntity employeeNew = employeeService.saveEmployee(employee);
         return ResponseEntity.ok(employeeNew);
     }
 
-    @PutMapping
+    @PutMapping("/")
     public ResponseEntity<EmployeeEntity> updateEmployee(@RequestBody EmployeeEntity employee){
         EmployeeEntity employeeUpdated = employeeService.updateEmployee(employee);
         return ResponseEntity.ok(employeeUpdated);
@@ -42,6 +42,4 @@ public class EmployeeController {
         var isDeleted = employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
-
-    //PONER AQUI LOS CALCULOS DEL COSTO TOTAL???
 }
