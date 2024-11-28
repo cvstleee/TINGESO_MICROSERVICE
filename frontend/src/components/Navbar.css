@@ -1,0 +1,21 @@
+.Navbar {
+    margin: 0; /* Elimina el margen alrededor del Navbar */
+    padding: 0; /* Elimina el padding alrededor del Navbar */
+}
+
+.navbar {
+    margin: 0; /* Elimina el margen de la barra de navegación */
+    padding: 0; /* Elimina el padding de la barra de navegación */
+    justify-content: flex-start; /* Asegura que el contenido esté alineado a la izquierda */
+}
+
+.container-fluid {
+    padding-left: 0; /* Elimina el padding izquierdo del contenedor */
+}
+
+a{
+    text-align: center; /* Alinea el contenido a la izquierda */
+    color: white;
+    font-weight: 500;
+    font-size: 20px;
+}
