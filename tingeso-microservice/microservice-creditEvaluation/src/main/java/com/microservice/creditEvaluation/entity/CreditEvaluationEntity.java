@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 //Tbala de booleanos que cambiará el ejecutivo
 public class CreditEvaluationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //no se genera solo porque de mi lógica tiene la misma id del creditRequest
     @Column(unique = true, nullable = false)
     private Long id;
     //Reglas de negocio

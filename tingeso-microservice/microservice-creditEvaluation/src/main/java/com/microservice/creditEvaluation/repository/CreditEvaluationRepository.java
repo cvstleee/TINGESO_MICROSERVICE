@@ -15,6 +15,6 @@ public interface CreditEvaluationRepository extends JpaRepository<CreditEvaluati
     public CreditEvaluationEntity findByRelationshipDebtIncome(boolean relationship);
     public CreditEvaluationEntity findBySavingsCapacity(boolean savingsCapacity);
     //public CreditEvaluationEntity findByStatusEvaluation(String statusEvaluation);
-    public boolean existsByidCreditRequest(Long idCreditRequest);
+    boolean existsByIdCreditRequest(Long idCreditRequest);
 
 }

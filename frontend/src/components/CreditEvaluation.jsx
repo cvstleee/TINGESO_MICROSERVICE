@@ -1,25 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importar useNavigate
 import creditRequestService from '../services/creditRequest.service';
 import creditEvaluationService from '../services/creditEvaluation.service';
 
 const CreditEvaluation = () => {
+    const navigate = useNavigate(); // Inicializar el hook useNavigate
     const [evaluation, setEvaluation] = useState({
+        id: '',
         relationshipFeeIncome: false,
         appropiateAge: false,
         historyDICOM: false,
         antiquity: false,
         relationshipDebtIncome: false,
         savingsCapacity: false,
-        statusEvaluation: '',
-        creditRequestId: ''
+        idCreditRequest: ''
     });
-
     const [creditRequests, setCreditRequests] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [monthDebt, setMonthDebt] = useState(0);
     const [income, setIncome] = useState(0);
-    const [savingsParams, setSavingsParams] = useState({ R71: false, R72: false, R73: false, R74: false, R75: false });
-    const [step, setStep] = useState(1); // Para controlar el flujo secuencial
+    const [savingsParams, setSavingsParams] = useState({
+        R71: false,
+        R72: false,
+        R73: false,
+        R74: false,
+        R75: false
+    });
+    const [step, setStep] = useState(1);
 
     const init = async () => {
         try {
@@ -31,49 +38,36 @@ const CreditEvaluation = () => {
     };
 
     useEffect(() => {
-        init(); // Carga los datos al montar el componente
+        init();
     }, []);
 
     const handleChange = (event) => {
         const { name, value, checked } = event.target;
+
         if (name.startsWith('R7')) {
-            // Manejo de parámetros de ahorro
             setSavingsParams(prev => ({ ...prev, [name]: checked }));
         } else {
             setEvaluation(prevEvaluation => ({
                 ...prevEvaluation,
-                [name]: name === 'status' ? value : checked !== undefined ? checked : value,
+                [name]: checked !== undefined ? checked : value,
             }));
         }
 
-        // Si es una selección de creditRequest, guarda los detalles
-        if (name === 'creditRequestId') {
+        if (name === 'idCreditRequest') {
             const selectedRequest = creditRequests.find(request => request.id === value);
             if (selectedRequest) {
-                // Aquí puedes agregar más lógica si necesitas otros campos del request
+                setEvaluation(prev => ({ ...prev, idCreditRequest: value, id: selectedRequest.id }));
             }
-        }
-    };
-
-    const handleCalculateRelationshipDebtIncome = async () => {
-        setIsLoading(true);
-        try {
-            const response = await creditEvaluationService.calculateRelationshipDebtIncome(evaluation.creditRequestId, monthDebt, income);
-            setEvaluation(prev => ({ ...prev, relationshipDebtIncome: response.data.relationshipDebtIncome }));
-            setStep(2); // Avanza al siguiente paso
-        } catch (error) {
-            console.error('Error al calcular relación deuda-ingreso:', error);
-        } finally {
-            setIsLoading(false);
         }
     };
 
     const handleSavingCapacity = async () => {
         setIsLoading(true);
         try {
-            const response = await creditEvaluationService.savingCapacity(evaluation.creditRequestId, savingsParams.R71, savingsParams.R72, savingsParams.R73, savingsParams.R74, savingsParams.R75);
+            const response = await creditEvaluationService.savingCapacity(evaluation.idCreditRequest, savingsParams.R71, savingsParams.R72, savingsParams.R73, savingsParams.R74, savingsParams.R75);
             setEvaluation(prev => ({ ...prev, savingsCapacity: response.data.savingsCapacity }));
-            // Aquí podrías finalizar o reiniciar el proceso si es necesario
+            // Avanza a la etapa 3 después de calcular la capacidad de ahorro
+            setStep(3); 
         } catch (error) {
             console.error('Error al calcular capacidad de ahorro:', error);
         } finally {
@@ -83,127 +77,116 @@ const CreditEvaluation = () => {
 
     const handleSubmit = async () => {
         if (step === 1) {
-            // Si estamos en el primer paso, calcular relación deuda-ingreso
-            await handleCalculateRelationshipDebtIncome();
+            await handleSavingCapacity(); // Solo se calcula la capacidad de ahorro en este paso
         } else if (step === 2) {
-            // Si estamos en el segundo paso, calcular capacidad de ahorro
-            await handleSavingCapacity();
-        } else {
-            // Guardar evaluación final
-            setIsLoading(true);
-            try {
-                const data = await creditEvaluationService.create(evaluation);
-                console.log('Evaluación guardada:', data);
-                // Reiniciar o finalizar el proceso
-                setStep(1); // Reiniciar al primer paso si es necesario
-                setEvaluation({
-                    relationshipFeeIncome: false,
-                    appropiateAge: false,
-                    historyDICOM: false,
-                    antiquity: false,
-                    relationshipDebtIncome: false,
-                    savingsCapacity: false,
-                    statusEvaluation: '',
-                    creditRequestId: ''
-                });
-                setSavingsParams({ R71: false, R72: false, R73: false, R74: false, R75: false });
-            } catch (error) {
-                console.error('Error:', error);
-            } finally {
-                setIsLoading(false);
-            }
+            await saveEvaluation(); // Guardar evaluación en este paso
         }
     };
 
-    return (
-        <div>
-            {/* Menú desplegable para seleccionar la solicitud de crédito */}
-            <label htmlFor="creditRequestId">Seleccionar Solicitud de Crédito:</label>
-            <select 
-                id="creditRequestId" 
-                name="creditRequestId"
-                value={evaluation.creditRequestId}
-                onChange={handleChange} 
-                required
-            >
-                <option value="">Seleccione una opción</option>
-                {creditRequests.map(request => (
-                    <option key={request.id} value={request.id}> {request.id} </option>
-                ))}
-            </select>
-        
-            {/* Checkboxes */}
-            <div>
-                <label>
-                    <input
-                        type="checkbox"
-                        name="relationshipFeeIncome"
-                        checked={evaluation.relationshipFeeIncome}
-                        onChange={handleChange}
-                    />
-                    Relación Cuota Ingreso
-                </label>
-            </div>
+    const saveEvaluation = async () => {
+        setIsLoading(true);
+        try {
+            const data = await creditEvaluationService.create(evaluation); 
+            console.log('Evaluación guardada:', data);
+
+            // Calcular relación deuda-ingreso después de guardar
+            await calculateRelationshipDebtIncome();
+
+            resetEvaluation();
             
-            {/* Otros checkboxes... */}
+            // Redirigir a TotalCost si se cumplen todas las condiciones
+            if (evaluation.relationshipDebtIncome && evaluation.savingsCapacity) { 
+                navigate('/total-cost'); 
+            }
 
-            {/* Inputs para relación deuda-ingreso */}
-            {step === 1 && (
-                <div>
-                    <label>Meses de Deuda:</label>
-                    <input type="number" value={monthDebt} onChange={(e) => setMonthDebt(e.target.value)} />
-                    
-                    <label>Ingreso:</label>
-                    <input type="number" value={income} onChange={(e) => setIncome(e.target.value)} />
-                    
-                    <button onClick={handleSubmit} disabled={isLoading}>
-                      {isLoading ? 'Calculando...' : 'Calcular Relación Deuda-Ingreso'}
-                    </button>
-                </div>
-            )}
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-            {/* Inputs para capacidad de ahorro */}
-            {step === 2 && (
-                <div>
-                    <label>
-                        <input type="checkbox" name="R71" checked={savingsParams.R71} onChange={handleChange} />
-                        Parámetro R71
-                    </label>
+    const calculateRelationshipDebtIncome = async () => {
+        setIsLoading(true);
+        try {
+            const response = await creditEvaluationService.calculateRelationshipDebtIncome(evaluation.id, monthDebt, income);
+            setEvaluation(prev => ({ ...prev, relationshipDebtIncome: response.data.relationshipDebtIncome }));
+          } catch (error) {
+              console.error('Error al calcular relación deuda-ingreso:', error);
+          } finally {
+              setIsLoading(false);
+          }
+      };
 
-                    {/* Otros parámetros... */}
+    const resetEvaluation = () => {
+        setStep(1); // Reiniciar al primer paso si es necesario
+        setEvaluation({
+            id: '',
+            relationshipFeeIncome: false,
+            appropiateAge: false,
+            historyDICOM: false,
+            antiquity: false,
+            relationshipDebtIncome: false,
+            savingsCapacity: false,
+            idCreditRequest: ''
+        });
+        setSavingsParams({ R71: false, R72: false, R73: false, R74: false, R75: false });
+    };
 
-                    <button onClick={handleSubmit} disabled={isLoading}>
+    return (
+      <div>
+          <label htmlFor="idCreditRequest">Seleccionar Solicitud de Crédito:</label>
+          <select id="idCreditRequest" name="idCreditRequest" value={evaluation.idCreditRequest} onChange={handleChange} required>
+              <option value="">Seleccione una opción</option>
+              {creditRequests.map(request => (
+                  <option key={request.id} value={request.id}>
+                      {request.id}
+                  </option>
+              ))}
+          </select>
+          <div>
+              <label>
+                  <input type="checkbox" name="relationshipFeeIncome" checked={evaluation.relationshipFeeIncome} onChange={handleChange} /> Relación Cuota Ingreso
+              </label>
+              <label>
+                  <input type="checkbox" name="appropiateAge" checked={evaluation.appropiateAge} onChange={handleChange} /> Edad Apropiada
+              </label>
+              <label>
+                  <input type="checkbox" name="historyDICOM" checked={evaluation.historyDICOM} onChange={handleChange} /> Historial DICOM
+              </label>
+              <label>
+                  <input type="checkbox" name="antiquity" checked={evaluation.antiquity} onChange={handleChange} /> Antigüedad
+              </label>
+              
+              <label>
+                  <input type="checkbox" name="savingsCapacity" checked={evaluation.savingsCapacity} onChange={handleChange} /> Capacidad de Ahorro
+              </label>
+              {/* Mostrar estado de relación deuda ingreso */}
+              <div>
+                  <strong>Relación Deuda Ingreso:</strong> {evaluation.relationshipDebtIncome ? 'Aprobado' : 'No Aprobado'}
+              </div>
+          </div>
+          {step === 2 && (
+              <div>
+                  <label>Meses de Deuda:</label>
+                  <input type="number" value={monthDebt} onChange={(e) => setMonthDebt(e.target.value)} />
+                  <label>Ingreso:</label>
+                  <input type="number" value={income} onChange={(e) => setIncome(e.target.value)} />
+                  <button onClick={handleSubmit} disabled={isLoading}>
                       {isLoading ? 'Calculando...' : 'Calcular Capacidad de Ahorro'}
-                    </button>
-                </div>
-            )}
-
-             {/* Botón para guardar evaluación final */}
-             {step === 3 && (
-                 <button onClick={handleSubmit} disabled={isLoading}>
-                   {isLoading ? 'Guardando...' : 'Guardar Evaluación'}
-                 </button>
-             )}
-
-             {/* Menú desplegable para cambiar el estado */}
-             <div>
-                 <label htmlFor="status">Modificar Estado:</label>
-                 <select 
-                     id="statusEvaluation" 
-                     name="statusEvaluation"
-                     value={evaluation.statusEvaluation}
-                     onChange={handleChange} 
-                     required
-                 >
-                     <option value="">Seleccione un nuevo estado</option>
-                     <option value="Aprobado">Aprobado</option>
-                     <option value="Rechazado">Rechazado</option>
-                     <option value="Pendiente">Pendiente</option>
-                 </select>
-             </div>
-
-         </div>
-     );
+                  </button>
+              </div>
+          )}
+          {step === 1 && (
+              <>
+                  {/* Botón para guardar la evaluación */}
+                  <button onClick={saveEvaluation} disabled={isLoading}>
+                      {isLoading ? 'Guardando...' : 'Guardar Evaluación'}
+                  </button>
+              </>
+          )}
+      </div>
+    );
 };
 
 export default CreditEvaluation;

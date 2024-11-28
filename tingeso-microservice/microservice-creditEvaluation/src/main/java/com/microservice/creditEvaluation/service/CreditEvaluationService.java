@@ -28,19 +28,16 @@ public class CreditEvaluationService {
     }
 
     public CreditEvaluationEntity getById(Long id){
+        System.out.print("ID EN GET BY ID" + id);
         return creditEvaluationRepository.findById(id).get();
+    }
+
+    public boolean existCreditRequestById(Long idCreditRequest) {
+        return creditEvaluationRepository.existsByIdCreditRequest(idCreditRequest);
     }
 
     public CreditEvaluationEntity updateCreditEvaluation(CreditEvaluationEntity creditEvaluation) {
         return creditEvaluationRepository.save(creditEvaluation);
-    }
-
-    public boolean existCreditRequestById(Long id){
-        if(creditEvaluationRepository.existsByidCreditRequest(id)){
-            return true;
-        }else{
-            return false;
-        }
     }
 
     public boolean deleteCreditEvaluation(Long id) throws Exception{
@@ -54,6 +51,7 @@ public class CreditEvaluationService {
 
     //monthDebth en entidad de solicitud de crédito
     public boolean relationshipDebthIncome(int monthDebth, int income){
+        System.out.print("deuda" + monthDebth);
         int temp = monthDebth/income;
         int relation = temp * 100;
 

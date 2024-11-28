@@ -27,6 +27,7 @@ public class CreditEvaluationController {
 
     @PostMapping("/")
     public ResponseEntity<CreditEvaluationEntity> saveCreditEvaluation(@RequestBody CreditEvaluationEntity creditEvaluation) {
+        creditEvaluation.setId(creditEvaluation.getIdCreditRequest());
         CreditEvaluationEntity creditEvaluationNew = creditEvaluationService.saveCreditEvaluation(creditEvaluation);
         return ResponseEntity.ok(creditEvaluationNew);
     }
@@ -46,6 +47,8 @@ public class CreditEvaluationController {
     //R1
     @PutMapping("/calculateRelationship/{id}")
     public ResponseEntity<CreditEvaluationEntity> calculateRelationshipDebthIncome(@PathVariable Long id, @RequestParam int monthDebth, @RequestParam int income) {
+        System.out.print("ID:" + id);
+        //pero como lo agrego si esto se hace antes de guadar la solicitud?
         CreditEvaluationEntity creditEvaluation = creditEvaluationService.getById(id);
         if(creditEvaluationService.relationshipDebthIncome(monthDebth, income)){
             creditEvaluation.setRelationshipDebtIncome(true);
