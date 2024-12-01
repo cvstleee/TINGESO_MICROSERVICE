@@ -28,7 +28,7 @@ public class CreditEvaluationService {
     }
 
     public CreditEvaluationEntity getById(Long id){
-        System.out.print("ID EN GET BY ID" + id);
+       // System.out.print("ID EN GET BY ID" + id);
         return creditEvaluationRepository.findById(id).get();
     }
 
@@ -49,24 +49,30 @@ public class CreditEvaluationService {
         }
     }
 
-    //monthDebth en entidad de solicitud de crédito
-    public boolean relationshipDebthIncome(int monthDebth, int income){
-        System.out.print("deuda" + monthDebth);
-        int temp = monthDebth/income;
-        int relation = temp * 100;
+    public boolean relationshipDebthIncome(int monthDebth, int income) {
+        System.out.print("deuda: " + monthDebth);
+        System.out.print(" income: " + income);
 
-        if (relation <= 35){
-            return true;
-        }else{
-            return false;
-        }
+        // Convertir monthDebth a double para evitar la truncación
+        double temp = (double) monthDebth / income; // Asegúrate de que al menos uno sea double
+        System.out.print("\ndivision: " + temp);
+
+        double relation = temp * 100;
+        System.out.println("\nrelation debth income is " + relation);
+
+        return relation <= 35; // Retorna directamente el resultado
     }
-    //recibe todos los checks del saving capacity y en caso de cumplir todo devuelve true, se lo manda al controller
-    //y el controller se lo modifica a la credit evaluation
-    public boolean savingCapacity(boolean R71, boolean R72, boolean R73, boolean R74, boolean R75){
-        if(R71 && R72 && R73 && R74 && R75){
+
+    //cambiar el estado de la evaluation después de haber sido revisada
+    public boolean statusChange(Long id){
+        System.out.print("\nID STATUS"+id);
+        CreditEvaluationEntity creditEvaluation = getById(id);
+        if(creditEvaluation.isRelationshipDebtIncome() && creditEvaluation.isAntiquity() && creditEvaluation.isAppropiateAge() &&
+        creditEvaluation.isHistoryDICOM() && creditEvaluation.isRelationshipFeeIncome() && creditEvaluation.isSavingsCapacity()){
+            System.out.print("TRUE");
             return true;
         }else{
+            System.out.print("FALSE");
             return false;
         }
     }

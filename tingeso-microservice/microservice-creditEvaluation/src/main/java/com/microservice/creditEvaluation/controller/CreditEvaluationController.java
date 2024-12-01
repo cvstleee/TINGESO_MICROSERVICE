@@ -47,14 +47,23 @@ public class CreditEvaluationController {
     //R1
     @PutMapping("/calculateRelationship/{id}")
     public ResponseEntity<CreditEvaluationEntity> calculateRelationshipDebthIncome(@PathVariable Long id, @RequestParam int monthDebth, @RequestParam int income) {
-        System.out.print("ID:" + id);
-        //pero como lo agrego si esto se hace antes de guadar la solicitud?
+        System.out.println("ID: " + id);
+        System.out.println("monthDebth: " + monthDebth);
+        System.out.println("income: " + income);
+
         CreditEvaluationEntity creditEvaluation = creditEvaluationService.getById(id);
-        if(creditEvaluationService.relationshipDebthIncome(monthDebth, income)){
+
+        if (creditEvaluationService.relationshipDebthIncome(monthDebth, income)) {
             creditEvaluation.setRelationshipDebtIncome(true);
-        }else{
+            System.out.println("La relación deuda-ingreso es aprobada.");
+        } else {
             creditEvaluation.setRelationshipDebtIncome(false);
+            System.out.println("La relación deuda-ingreso no es aprobada.");
         }
+
+        // Guarda los cambios en la entidad si es necesario
+        creditEvaluationService.updateCreditEvaluation(creditEvaluation);
+
         return ResponseEntity.ok(creditEvaluation);
     }
 
@@ -65,16 +74,17 @@ public class CreditEvaluationController {
     //R6 EDAD, SACARLA DEL COSTUMER Y MOSTRARLA PARA QUE EL EMPLEADO PUEDA DECIDIR SI CUMPLE O NO
     //R7 SAVING CAPACITY
 
-    @PutMapping("/savingCapacity/{id}")
-    public ResponseEntity<CreditEvaluationEntity> savingCapacity(@PathVariable Long id, @RequestParam boolean R71,
-    @RequestParam boolean R72, @RequestParam boolean R73, @RequestParam boolean R74, @RequestParam boolean R75){
+    @PutMapping("/status/{id}")
+    public ResponseEntity<CreditEvaluationEntity> statusChange(@PathVariable Long id){
         CreditEvaluationEntity creditEvaluation = creditEvaluationService.getById(id);
-        if(creditEvaluationService.savingCapacity(R71, R72, R73, R74, R75)){
-            creditEvaluation.setSavingsCapacity(true);
+        boolean status = creditEvaluationService.statusChange(id);
+        if(status){
+            creditEvaluation.setStatus("Aprobado");
         }else{
-            creditEvaluation.setSavingsCapacity(false);
+            creditEvaluation.setStatus("Rechazado");
         }
-        return ResponseEntity.ok(creditEvaluation);
+        creditEvaluationService.updateCreditEvaluation(creditEvaluation);
+        return ResponseEntity.noContent().build();
     }
 
 }

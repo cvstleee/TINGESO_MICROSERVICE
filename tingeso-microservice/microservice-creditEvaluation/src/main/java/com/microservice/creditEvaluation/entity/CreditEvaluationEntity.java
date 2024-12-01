@@ -31,5 +31,6 @@ public class CreditEvaluationEntity {
     private boolean savingsCapacity;
     //pq la id costumer y employee ya lo tiene el credit request
     private Long idCreditRequest;
+    private String status;
 
 }

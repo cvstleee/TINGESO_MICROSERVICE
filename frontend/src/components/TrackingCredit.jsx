@@ -1,86 +1,130 @@
 import React, { useState, useEffect } from 'react';
 import creditRequestService from '../services/creditRequest.service';
 import creditEvaluationService from '../services/creditEvaluation.service';
+import costumerService from '../services/costumer.service';
+import employeeService from '../services/employee.service';
 
 const TrackingCredit = () => {
     const [creditRequests, setCreditRequests] = useState([]);
-    const [selectedRequestId, setSelectedRequestId] = useState(null);
+    const [selectedId, setSelectedId] = useState(null);
     const [creditRequest, setCreditRequest] = useState(null);
-    const [statusEvaluation, setStatusEvaluation] = useState(null); // Nuevo estado para almacenar statusEvaluation
+    const [creditEvaluation, setCreditEvaluation] = useState(null);
+    const [customerName, setCustomerName] = useState('');
+    const [employeeName, setEmployeeName] = useState('');
+
+    // Función para obtener todas las solicitudes de crédito
+    const fetchCreditRequests = async () => {
+        try {
+            const response = await creditRequestService.getAll();
+            setCreditRequests(response.data);
+        } catch (error) {
+            console.error("Error fetching credit requests:", error);
+        }
+    };
+
+    // Función para obtener el creditRequest por ID
+    const getCreditRequest = async (id) => {
+        try {
+            const response = await creditRequestService.get(id);
+            setCreditRequest(response.data);
+            fetchCustomerAndEmployee(response.data.idCostumer, response.data.idEmployee); // Obtener cliente y empleado
+        } catch (error) {
+            console.error("Error fetching credit request:", error);
+        }
+    };
+
+    // Función para obtener la creditEvaluation por ID
+    const getCreditEvaluation = async (id) => {
+        try {
+            const response = await creditEvaluationService.get(id);
+            setCreditEvaluation(response.data);
+        } catch (error) {
+            console.error("Error fetching credit evaluation:", error);
+        }
+    };
+
+    // Función para obtener el nombre del cliente y del empleado
+    const fetchCustomerAndEmployee = async (customerId, employeeId) => {
+        if (customerId) {
+            try {
+                const customerResponse = await costumerService.get(customerId);
+                setCustomerName(`${customerResponse.data.name} ${customerResponse.data.lastName}`);
+            } catch (error) {
+                console.error("Error fetching customer:", error);
+                setCustomerName('No disponible');
+            }
+        }
+
+        if (employeeId) {
+            try {
+                const employeeResponse = await employeeService.get(employeeId);
+                setEmployeeName(`${employeeResponse.data.firstName} ${employeeResponse.data.lastName}`);
+            } catch (error) {
+                console.error("Error fetching employee:", error);
+                setEmployeeName('No disponible');
+            }
+        }
+    };
 
     useEffect(() => {
-        const fetchCreditRequests = async () => {
-            try {
-                const response = await creditRequestService.getAll();
-                setCreditRequests(response.data);
-            } catch (error) {
-                console.error("Error fetching credit requests:", error);
-            }
-        };
-
-        fetchCreditRequests();
+        fetchCreditRequests(); // Cargar todas las solicitudes al montar el componente
     }, []);
 
     useEffect(() => {
-        if (selectedRequestId) {
-            // Obtener detalles de CreditRequest
-            const fetchCreditRequest = async () => {
-                try {
-                    const response = await creditRequestService.get(selectedRequestId);
-                    setCreditRequest(response.data);
-                } catch (error) {
-                    console.error("Error fetching credit request:", error);
-                }
-            };
+        if (selectedId) {
+            // Reiniciar estados antes de cargar nueva solicitud
+            setCreditRequest(null);
+            setCreditEvaluation(null);
+            setCustomerName('');
+            setEmployeeName('');
 
-            fetchCreditRequest();
-
-            // Obtener statusEvaluation de CreditEvaluation
-            const fetchCreditEvaluation = async () => {
-                try {
-                    const response = await creditEvaluationService.get(selectedRequestId); // Utiliza el mismo ID, en el docker esto se desconfigura ojo
-                    setStatusEvaluation(response.data.statusEvaluation);
-                } catch (error) {
-                    console.error("Error fetching credit evaluation:", error);
-                }
-            };
-
-            fetchCreditEvaluation();
+            getCreditRequest(selectedId);
+            getCreditEvaluation(selectedId);
         }
-    }, [selectedRequestId]);
-
-    const handleSelectChange = (event) => {
-        setSelectedRequestId(event.target.value);
-        setCreditRequest(null); // Limpiar el estado anterior
-        setStatusEvaluation(null); // Limpiar el estado anterior de statusEvaluation
-    };
+    }, [selectedId]);
 
     return (
         <div>
-            <h3>Selecciona una Solicitud de Crédito</h3>
-            <select onChange={handleSelectChange} value={selectedRequestId || ''}>
+            <h1>Seguimiento de Solicitud de Crédito</h1>
+            <select onChange={(e) => setSelectedId(e.target.value)} value={selectedId || ''}>
                 <option value="" disabled>Seleccione una solicitud</option>
                 {creditRequests.map(request => (
                     <option key={request.id} value={request.id}>
-                     ID: {request.id}
+                        {request.id} - {request.type} {/* Cambia esto según un campo descriptivo */}
                     </option>
                 ))}
             </select>
 
-            {creditRequest ? (
+            {creditRequest && (
                 <div>
-                    <h3>Información de Credit Request</h3>
-                    <p>ID: {creditRequest.id}</p>
-                    <p>Estado Evaluación: {statusEvaluation}</p> 
-                    <p>Tipo de Préstamo: {creditRequest.type}</p>
-                    <p>Monto del Préstamo: {creditRequest.creditAmount}</p>
-                    <p>Cuota Mensual: {creditRequest.monthDebth}</p>
-                    <p>Plazo: {creditRequest.deadline} meses</p>
-                    <p>Tasa de Interés Anual: {creditRequest.interestRateYear}%</p>
-                    <p>Tasa de Interés Mensual: {creditRequest.interestRateMonth}%</p>
+                    <h2>Detalles de la Solicitud de Crédito</h2>
+                   
+                        <li><strong>ID de Solicitud:</strong> {creditRequest.id}</li>
+                        <li><strong>Tipo de Crédito:</strong> {creditRequest.type}</li>
+                        <li><strong>Monto del Crédito:</strong> ${creditRequest.creditAmount.toLocaleString()}</li>
+                        <li><strong>Plazo:</strong> {creditRequest.deadline} meses</li>
+                        <li><strong>Tasa de Interés Anual:</strong> {creditRequest.interestRateYear}%</li>
+                        <li><strong>Cliente:</strong> {customerName || 'No disponible'}</li>
+                        <li><strong>Empleado:</strong> {employeeName || 'No disponible'}</li>
+                    
                 </div>
-            ) : (
-                selectedRequestId && <div>Cargando información de la solicitud...</div>
+            )}
+
+            {creditEvaluation && (
+                <div>
+                    <h2>Detalles de la Evaluación de Crédito</h2>
+                    
+                        <li><strong>ID de Evaluación:</strong> {creditEvaluation.id}</li>
+                        <li><strong>Estado:</strong> {creditEvaluation.status}</li>
+                        <li><strong>Relación Cuota-Ingreso:</strong> {creditEvaluation.relationshipFeeIncome ? 'Aprobada' : 'No aprobada'}</li>
+                        <li><strong>Edad Apropiada:</strong> {creditEvaluation.appropiateAge ? 'Aprobada' : 'No aprobada'}</li>
+                        <li><strong>Historial DICOM:</strong> {creditEvaluation.historyDICOM ? 'Aprobado' : 'No aprobado'}</li>
+                        <li><strong>Antigüedad Laboral:</strong> {creditEvaluation.antiquity ? 'Aprobada' : 'No aprobada'}</li>
+                        <li><strong>Relación Deuda-Ingreso:</strong> {creditEvaluation.relationshipDebtIncome ? 'Aprobada' : 'No aprobada'}</li>
+                        <li><strong>Capacidad de Ahorro:</strong> {creditEvaluation.savingsCapacity ? 'Aprobada' : 'No aprobada'}</li>
+                        <li><strong>ID de Solicitud de Crédito:</strong> {creditEvaluation.idCreditRequest}</li>
+                   
+                </div>
             )}
         </div>
     );

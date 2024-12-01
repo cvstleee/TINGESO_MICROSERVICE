@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import costumerService from '../services/costumer.service';
+import calculationsService from '../services/calculations.service';
 
 const Simulation = () => {
   // Estado para almacenar los valores del formulario
@@ -27,7 +27,7 @@ const Simulation = () => {
     e.preventDefault(); // Previene la recarga de la página
 
       try {
-          const result = await costumerService.simulation(formData.loanAmount, formData.anualInterestRate, formData.termInYears); // Llama al servicio getSimulation
+          const result = await calculationsService.simulation(formData.loanAmount, formData.anualInterestRate, formData.termInYears); // Llama al servicio getSimulation
 
           console.log('Resultado de la simulación de crédito hipotecario:', result.data);
           setSimulationResult(result.data); // Almacena el resultado de la simulación en el estado

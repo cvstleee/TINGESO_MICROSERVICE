@@ -15,7 +15,8 @@ const CreditEvaluation = () => {
         antiquity: false,
         relationshipDebtIncome: false,
         savingsCapacity: false,
-        idCreditRequest: ''
+        idCreditRequest: '',
+        status: 'Pendiente'
     });
     const [creditRequests, setCreditRequests] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -114,7 +115,7 @@ const CreditEvaluation = () => {
 
           <Typography variant="h6">Evaluaciones</Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <FormControlLabel control={<Checkbox name="relationshipFeeIncome" checked={evaluation.relationshipFeeIncome} onChange={handleChange} />} label="Relación Cuota Ingreso" />
+              <FormControlLabel control={<Checkbox name="relationshipFeeIncome" checked={evaluation.relationshipFeeIncome} onChange={handleChange} />} label="Relación Deuda Ingreso" />
               <FormControlLabel control={<Checkbox name="appropiateAge" checked={evaluation.appropiateAge} onChange={handleChange} />} label="Edad Apropiada" />
               <FormControlLabel control={<Checkbox name="historyDICOM" checked={evaluation.historyDICOM} onChange={handleChange} />} label="Historial DICOM" />
               <FormControlLabel control={<Checkbox name="antiquity" checked={evaluation.antiquity} onChange={handleChange} />} label="Antigüedad" />
@@ -122,7 +123,7 @@ const CreditEvaluation = () => {
           </Box>
 
           <Typography variant="body1">
-              <strong>Relación Deuda Ingreso:</strong> {evaluation.relationshipDebtIncome ? 'Aprobado' : 'No Aprobado'}
+              <strong>Relación Cuota Ingreso:</strong> {evaluation.relationshipDebtIncome}
           </Typography>
 
           {step === 1 && (

@@ -25,6 +25,10 @@ const remove = id => {
     return httpClient.delete(`/creditEvaluation/${id}`);
 }
 
+const statusChange = id =>{
+    return httpClient.put(`/creditEvaluation/status/${id}`);
+}
+
 // Calcular la relación deuda-ingreso
 const calculateRelationshipDebtIncome = (id, monthDebt, income) => {
     return httpClient.put(`/creditEvaluation/calculateRelationship/${id}`, null, { params: { monthDebth: monthDebt, income } });
@@ -35,4 +39,4 @@ const savingCapacity = (id, R71, R72, R73, R74, R75) => {
     return httpClient.put(`/creditEvaluation/savingCapacity/${id}`, null, { params: { R71, R72, R73, R74, R75 } });
 }
 
-export default { getAll, create, get, update, remove, calculateRelationshipDebtIncome, savingCapacity };
+export default { getAll, create, get, update, remove, calculateRelationshipDebtIncome, savingCapacity, statusChange};
