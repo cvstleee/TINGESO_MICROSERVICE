@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { useNavigate } from 'react-router-dom'; 
+import { Button, Checkbox, FormControl, InputLabel, Select, MenuItem, CircularProgress, Typography, Box, FormControlLabel } from '@mui/material'; 
 import creditRequestService from '../services/creditRequest.service';
 import creditEvaluationService from '../services/creditEvaluation.service';
+import DebtIncomeRelationship from './DebtIncomeRelationship';
 
 const CreditEvaluation = () => {
-    const navigate = useNavigate(); // Inicializar el hook useNavigate
+    const navigate = useNavigate(); 
     const [evaluation, setEvaluation] = useState({
         id: '',
         relationshipFeeIncome: false,
@@ -17,8 +19,6 @@ const CreditEvaluation = () => {
     });
     const [creditRequests, setCreditRequests] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [monthDebt, setMonthDebt] = useState(0);
-    const [income, setIncome] = useState(0);
     const [savingsParams, setSavingsParams] = useState({
         R71: false,
         R72: false,
@@ -66,7 +66,6 @@ const CreditEvaluation = () => {
         try {
             const response = await creditEvaluationService.savingCapacity(evaluation.idCreditRequest, savingsParams.R71, savingsParams.R72, savingsParams.R73, savingsParams.R74, savingsParams.R75);
             setEvaluation(prev => ({ ...prev, savingsCapacity: response.data.savingsCapacity }));
-            // Avanza a la etapa 3 después de calcular la capacidad de ahorro
             setStep(3); 
         } catch (error) {
             console.error('Error al calcular capacidad de ahorro:', error);
@@ -75,30 +74,11 @@ const CreditEvaluation = () => {
         }
     };
 
-    const handleSubmit = async () => {
-        if (step === 1) {
-            await handleSavingCapacity(); // Solo se calcula la capacidad de ahorro en este paso
-        } else if (step === 2) {
-            await saveEvaluation(); // Guardar evaluación en este paso
-        }
-    };
-
     const saveEvaluation = async () => {
         setIsLoading(true);
         try {
-            const data = await creditEvaluationService.create(evaluation); 
-            console.log('Evaluación guardada:', data);
-
-            // Calcular relación deuda-ingreso después de guardar
-            await calculateRelationshipDebtIncome();
-
-            resetEvaluation();
-            
-            // Redirigir a TotalCost si se cumplen todas las condiciones
-            if (evaluation.relationshipDebtIncome && evaluation.savingsCapacity) { 
-                navigate('/total-cost'); 
-            }
-
+            await creditEvaluationService.create(evaluation); 
+            setStep(2); 
         } catch (error) {
             console.error('Error:', error);
         } finally {
@@ -106,86 +86,59 @@ const CreditEvaluation = () => {
         }
     };
 
-    const calculateRelationshipDebtIncome = async () => {
-        setIsLoading(true);
-        try {
-            const response = await creditEvaluationService.calculateRelationshipDebtIncome(evaluation.id, monthDebt, income);
-            setEvaluation(prev => ({ ...prev, relationshipDebtIncome: response.data.relationshipDebtIncome }));
-          } catch (error) {
-              console.error('Error al calcular relación deuda-ingreso:', error);
-          } finally {
-              setIsLoading(false);
-          }
-      };
-
-    const resetEvaluation = () => {
-        setStep(1); // Reiniciar al primer paso si es necesario
-        setEvaluation({
-            id: '',
-            relationshipFeeIncome: false,
-            appropiateAge: false,
-            historyDICOM: false,
-            antiquity: false,
-            relationshipDebtIncome: false,
-            savingsCapacity: false,
-            idCreditRequest: ''
-        });
-        setSavingsParams({ R71: false, R72: false, R73: false, R74: false, R75: false });
-    };
-
     return (
-      <div>
-          <label htmlFor="idCreditRequest">Seleccionar Solicitud de Crédito:</label>
-          <select id="idCreditRequest" name="idCreditRequest" value={evaluation.idCreditRequest} onChange={handleChange} required>
-              <option value="">Seleccione una opción</option>
-              {creditRequests.map(request => (
-                  <option key={request.id} value={request.id}>
-                      {request.id}
-                  </option>
-              ))}
-          </select>
-          <div>
-              <label>
-                  <input type="checkbox" name="relationshipFeeIncome" checked={evaluation.relationshipFeeIncome} onChange={handleChange} /> Relación Cuota Ingreso
-              </label>
-              <label>
-                  <input type="checkbox" name="appropiateAge" checked={evaluation.appropiateAge} onChange={handleChange} /> Edad Apropiada
-              </label>
-              <label>
-                  <input type="checkbox" name="historyDICOM" checked={evaluation.historyDICOM} onChange={handleChange} /> Historial DICOM
-              </label>
-              <label>
-                  <input type="checkbox" name="antiquity" checked={evaluation.antiquity} onChange={handleChange} /> Antigüedad
-              </label>
-              
-              <label>
-                  <input type="checkbox" name="savingsCapacity" checked={evaluation.savingsCapacity} onChange={handleChange} /> Capacidad de Ahorro
-              </label>
-              {/* Mostrar estado de relación deuda ingreso */}
-              <div>
-                  <strong>Relación Deuda Ingreso:</strong> {evaluation.relationshipDebtIncome ? 'Aprobado' : 'No Aprobado'}
-              </div>
-          </div>
-          {step === 2 && (
-              <div>
-                  <label>Meses de Deuda:</label>
-                  <input type="number" value={monthDebt} onChange={(e) => setMonthDebt(e.target.value)} />
-                  <label>Ingreso:</label>
-                  <input type="number" value={income} onChange={(e) => setIncome(e.target.value)} />
-                  <button onClick={handleSubmit} disabled={isLoading}>
-                      {isLoading ? 'Calculando...' : 'Calcular Capacidad de Ahorro'}
-                  </button>
-              </div>
-          )}
+      <Box sx={{ p: 3, bgcolor: '#ffffff', color: '#000000', borderRadius: 2 }}>
+          <Typography variant="h4" gutterBottom>
+              Evaluación de Crédito
+          </Typography>
+          <FormControl fullWidth margin="normal">
+              <InputLabel id="idCreditRequest-label">Seleccionar Solicitud de Crédito</InputLabel>
+              <Select
+                  labelId="idCreditRequest-label"
+                  id="idCreditRequest"
+                  name="idCreditRequest"
+                  value={evaluation.idCreditRequest}
+                  onChange={handleChange}
+                  required
+              >
+                  <MenuItem value="">
+                      <em>Seleccione una opción</em>
+                  </MenuItem>
+                  {creditRequests.map(request => (
+                      <MenuItem key={request.id} value={request.id}>
+                          {request.id}
+                      </MenuItem>
+                  ))}
+              </Select>
+          </FormControl>
+
+          <Typography variant="h6">Evaluaciones</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <FormControlLabel control={<Checkbox name="relationshipFeeIncome" checked={evaluation.relationshipFeeIncome} onChange={handleChange} />} label="Relación Cuota Ingreso" />
+              <FormControlLabel control={<Checkbox name="appropiateAge" checked={evaluation.appropiateAge} onChange={handleChange} />} label="Edad Apropiada" />
+              <FormControlLabel control={<Checkbox name="historyDICOM" checked={evaluation.historyDICOM} onChange={handleChange} />} label="Historial DICOM" />
+              <FormControlLabel control={<Checkbox name="antiquity" checked={evaluation.antiquity} onChange={handleChange} />} label="Antigüedad" />
+              <FormControlLabel control={<Checkbox name="savingsCapacity" checked={evaluation.savingsCapacity} onChange={handleChange} />} label="Capacidad de Ahorro" />
+          </Box>
+
+          <Typography variant="body1">
+              <strong>Relación Deuda Ingreso:</strong> {evaluation.relationshipDebtIncome ? 'Aprobado' : 'No Aprobado'}
+          </Typography>
+
           {step === 1 && (
-              <>
-                  {/* Botón para guardar la evaluación */}
-                  <button onClick={saveEvaluation} disabled={isLoading}>
-                      {isLoading ? 'Guardando...' : 'Guardar Evaluación'}
-                  </button>
-              </>
+              <Button variant="contained" color="primary" onClick={saveEvaluation} disabled={isLoading}>
+                  {isLoading ? <CircularProgress size={24} /> : 'Guardar Evaluación'}
+              </Button>
           )}
-      </div>
+
+          {step === 2 && (
+              <DebtIncomeRelationship 
+                  evaluation={evaluation}
+                  resetEvaluation={() => setStep(1)}
+                  navigate={navigate}
+              />
+          )}
+      </Box>
     );
 };
 
