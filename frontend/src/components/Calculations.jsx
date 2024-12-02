@@ -25,17 +25,15 @@ const Calculations = () => {
         const selectedIndex = e.target.value;
         if (selectedIndex !== "") {
             setSelectedRequest(creditRequests[selectedIndex]);
-            // Reiniciar totalCost y error al seleccionar una nueva solicitud
             setTotalCost(null);
             setError(null);
         } else {
             setSelectedRequest(null);
-            setTotalCost(null); // Reiniciar totalCost si no hay selección
-            setError(null); // Reiniciar error si no hay selección
+            setTotalCost(null);
+            setError(null);
         }
     };
 
-    // Maneja el envío del formulario
     const handleCalculate = async (e) => {
         e.preventDefault();
 
@@ -52,11 +50,16 @@ const Calculations = () => {
 
         try {
             const response = await calculationsService.totalCost(selectedRequest.id, params);
-            setTotalCost(response.data); // Guardar la respuesta
+            setTotalCost(response.data);
             setError(null);
         } catch (error) {
             setError(error.message);
         }
+    };
+
+    // Función para formatear números como moneda chilena
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
     };
 
     return (
@@ -66,7 +69,7 @@ const Calculations = () => {
                 <option value="">Selecciona una solicitud de crédito</option>
                 {creditRequests.map((request, index) => (
                     <option key={request.id} value={index}>
-                        {request.id} - {request.creditAmount}
+                        {request.id} - {formatCurrency(request.creditAmount)}
                     </option>
                 ))}
             </select>
@@ -75,7 +78,7 @@ const Calculations = () => {
                 <div>
                     <h2>Detalles de la Solicitud Seleccionada:</h2>
                     <p><strong>ID:</strong> {selectedRequest.id}</p>
-                    <p><strong>Monto del Crédito:</strong> {selectedRequest.creditAmount}</p>
+                    <p><strong>Monto del Crédito:</strong> {formatCurrency(selectedRequest.creditAmount)}</p>
                     <p><strong>Tasa de Interés Anual:</strong> {selectedRequest.interestRateYear !== null ? selectedRequest.interestRateYear.toFixed(2) + '%' : 'No disponible'}</p>
                     <p><strong>Plazo:</strong> {selectedRequest.deadline}</p>
                 </div>
@@ -85,17 +88,18 @@ const Calculations = () => {
                 Calcular Costo Total
             </button>
 
-            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Mostrar errores */}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
 
             {totalCost && (
                 <div>
                     <h2>Resultados del Cálculo:</h2>
                     <p><strong>ID Solicitud:</strong> {totalCost.idCreditRequest}</p>
-                    <p><strong>Cuota Mensual:</strong> {totalCost.monthCost}</p>
-                    <p><strong>Costo Total:</strong> {totalCost.totalCost}</p>
-                    <p><strong>Seguro de Vida:</strong> {totalCost.lifeInsurance}</p>
-                    <p><strong>Seguro Contra Incendios:</strong> {totalCost.fireInsurance}</p>
-                    {/* Agrega más propiedades según sea necesario */}
+                    <p><strong>Cuota Mensual:</strong> {formatCurrency(totalCost.monthDebth)}</p>
+                    <p><strong>Costo Mensual:</strong> {formatCurrency(totalCost.monthCost)}</p>
+                    <p><strong>Costo Total:</strong> {formatCurrency(totalCost.totalCost)}</p>
+                    <p><strong>Seguro de Vida:</strong> {formatCurrency(totalCost.lifeInsurance)}</p>
+                    <p><strong>Seguro Contra Incendios:</strong> {formatCurrency(totalCost.fireInsurance)}</p>
+                    <p><strong>Fee Administración:</strong> {formatCurrency(totalCost.administrationFee)}</p>
                 </div>
             )}
         </div>
