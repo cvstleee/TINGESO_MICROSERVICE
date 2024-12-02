@@ -47,9 +47,9 @@ public class CreditEvaluationController {
     //R1
     @PutMapping("/calculateRelationship/{id}")
     public ResponseEntity<CreditEvaluationEntity> calculateRelationshipDebthIncome(@PathVariable Long id, @RequestParam int monthDebth, @RequestParam int income) {
-        System.out.println("ID: " + id);
-        System.out.println("monthDebth: " + monthDebth);
-        System.out.println("income: " + income);
+       // System.out.println("ID: " + id);
+       // System.out.println("monthDebth: " + monthDebth);
+       // System.out.println("income: " + income);
 
         CreditEvaluationEntity creditEvaluation = creditEvaluationService.getById(id);
 

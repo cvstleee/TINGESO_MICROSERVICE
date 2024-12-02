@@ -127,7 +127,7 @@ const CreditRequest = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="deadline">Plazo en Meses:</label>
+                    <label htmlFor="deadline">Plazo en Años:</label>
                     <input 
                         type="number" 
                         id="deadline" 

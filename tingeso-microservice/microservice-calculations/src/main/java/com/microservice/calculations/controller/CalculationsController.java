@@ -79,24 +79,22 @@ public class CalculationsController {
         calculation.setMonthDebth(monthDebth);
 
         // 2. Cálculos de seguros
-        int lifeInsurance = totalCostService.calculateLifeInsurance(monthDebth);
+        int lifeInsurance = totalCostService.calculateLifeInsurance(creditAmount);
         calculation.setLifeInsurance(lifeInsurance);
         calculation.setFireInsurance(fireInsurance);
-        System.out.println(totalCostService.calculateLifeInsurance(100000000));
+        //System.out.println(totalCostService.calculateLifeInsurance(100000000));
 
         // 3. Cálculo de comisión de administración
-        int admiFee = totalCostService.calculateAdmiFee(monthDebth);
+        int admiFee = totalCostService.calculateAdmiFee(creditAmount);
         calculation.setAdministrationFee(admiFee);
 
         // 4. Cálculo de costos totales y mensuales
         int monthlyCost = totalCostService.monthlyCost(monthDebth, lifeInsurance, fireInsurance);
         calculation.setMonthCost(monthlyCost);
-        int totalCost = totalCostService.totalCost(monthDebth, deadline, admiFee);
+        int totalCost = totalCostService.totalCost(monthlyCost, deadline, admiFee);
         calculation.setTotalCost(totalCost);
 
         calculationsService.saveCalculation(calculation);
-        // Guardar los cambios en la base de datos
-        //creditRequestService.updateCreditRequest(calculation); // Asegúrate de que el servicio tenga este método
-        return ResponseEntity.ok(calculation); // Retorna el objeto actualizado
+        return ResponseEntity.ok(calculation);
     }
 }

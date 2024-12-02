@@ -50,8 +50,8 @@ public class CreditEvaluationService {
     }
 
     public boolean relationshipDebthIncome(int monthDebth, int income) {
-        System.out.print("deuda: " + monthDebth);
-        System.out.print(" income: " + income);
+       // System.out.print("deuda: " + monthDebth);
+       // System.out.print(" income: " + income);
 
         // Convertir monthDebth a double para evitar la truncación
         double temp = (double) monthDebth / income; // Asegúrate de que al menos uno sea double
@@ -65,14 +65,14 @@ public class CreditEvaluationService {
 
     //cambiar el estado de la evaluation después de haber sido revisada
     public boolean statusChange(Long id){
-        System.out.print("\nID STATUS"+id);
+        //System.out.print("\nID STATUS"+id);
         CreditEvaluationEntity creditEvaluation = getById(id);
         if(creditEvaluation.isRelationshipDebtIncome() && creditEvaluation.isAntiquity() && creditEvaluation.isAppropiateAge() &&
         creditEvaluation.isHistoryDICOM() && creditEvaluation.isRelationshipFeeIncome() && creditEvaluation.isSavingsCapacity()){
-            System.out.print("TRUE");
+          //  System.out.print("TRUE");
             return true;
         }else{
-            System.out.print("FALSE");
+           // System.out.print("FALSE");
             return false;
         }
     }
