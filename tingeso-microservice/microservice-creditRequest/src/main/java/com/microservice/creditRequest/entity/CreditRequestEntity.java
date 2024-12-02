@@ -27,7 +27,7 @@ public class CreditRequestEntity {
     //monto del prestamo
     private int creditAmount;
     //plazo, lo indica el ejecutivo según el máximo dispo en la tabla
-    private int deadline; //plazo en meses, si son 20 años 240 meses
+    private int deadline; //plazo en años
     //ejecutivo lo indica según tabla
     private double interestRateYear; //anual
     private Long idCostumer;

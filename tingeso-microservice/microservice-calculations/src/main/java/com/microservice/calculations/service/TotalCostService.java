@@ -11,30 +11,30 @@ public class TotalCostService {
     //2. Cálculo de los Seguros
 
     //TIENEN DISTINTOS PORCENTAJES
-    public int calculateLifeInsurance (int monthDebth, float percentage){
+    public int calculateLifeInsurance(int monthDebth) {
         float lifeInsurance;
-        float percentage100;
+        float percentage = 0.0003f; // Porcentaje como decimal
 
-        percentage100 = percentage / 100;
+        // Calcular el seguro de vida
+        lifeInsurance = monthDebth * percentage;
 
-        lifeInsurance = monthDebth * percentage100;
-
-        return (int) lifeInsurance;
+        // Redondear antes de convertir a int
+        return Math.round(lifeInsurance);
     }
 
     //el de incendio no se calcula
 
     //3. cálculo por comisión de administración
     //ES IGUAL AL OTRO, VER SI JUNTARLOS
-    public int calculateAdmiFee (int monthDebth, float percentage){
+    public int calculateAdmiFee(int monthDebth) {
         float admiFee;
-        float percentage100;
+        float percentage = 0.01f; // Porcentaje como decimal (1% es 0.01)
 
-        percentage100 = percentage / 100;
+        // Calcular la tarifa administrativa
+        admiFee = monthDebth * percentage; // Ahora se calcula correctamente como 1%
 
-        admiFee = monthDebth * percentage100;
-
-        return (int) admiFee;
+        // Redondear antes de convertir a int
+        return Math.round(admiFee);
     }
 
     //4. cálculo del costo total del préstamo

@@ -58,53 +58,43 @@ public class CalculationsController {
         return creditSimulationService.simulationDebt(P, r, n);
     }
 
-    @PutMapping("/calculateTotalCost/{id}")
+    @PostMapping("/calculateTotalCost/{id}")
     public ResponseEntity<CalculationsEntity> calculateTotalCost(
             @PathVariable Long id,
-            @RequestParam int loanAmount,
-            @RequestParam double anualInterestRate,
-            @RequestParam int termInYears,
-            @RequestParam int fireInsurance,
-            @RequestParam float percentage) {
+            @RequestParam int creditAmount,
+            @RequestParam double interestRateYear,
+            @RequestParam int deadline) {
 
-
-        // Obtener la solicitud de crédito por su ID (código antiguo)
-        // CÓDIGO ACTUAL: como ahora no modificaremos el objeto, sino que lo agregaremos a una entidad calculation
-        //hay que cambiar todo, y darle la id
+        int fireInsurance = 20000;
+        //loan amount es el monto del crédito = creditAmount
         CalculationsEntity calculation = new CalculationsEntity();
         //se guarda la id del credit request
         calculation.setIdCreditRequest(id);
 
-        //setters de creditAmount, deadline (termInMonths), interestRateMonth, interestRateYear, maxAmount
-        //esto lo saco de la credit request, tendría que comunicar este microservicio con el de credit request
-        //capaz no sea necesario, porque con esto SOBREESCRIBIA lo que ya existia en el credit request
-        //y si en vez de sobreescribirlo lo extraigo?
-        //calculation.setDeadline(termInYears * 12);
-        //calculation.setCreditAmount(loanAmount);
-        //calculation.setInterestRateYear(anualInterestRate);
-
-        double monthlyInterestRate = (anualInterestRate / 100) / 12;
+        double monthlyInterestRate = (interestRateYear / 100) / 12;
         calculation.setInterestRateMonth(monthlyInterestRate);
 
         // 1. Cálculo de cuota mensual
-        int monthDebth = creditSimulationService.simulationDebt(loanAmount, anualInterestRate, termInYears);
+        int monthDebth = creditSimulationService.simulationDebt(creditAmount, interestRateYear, deadline);
         calculation.setMonthDebth(monthDebth);
 
         // 2. Cálculos de seguros
-        int lifeInsurance = totalCostService.calculateLifeInsurance(monthDebth, percentage);
+        int lifeInsurance = totalCostService.calculateLifeInsurance(monthDebth);
         calculation.setLifeInsurance(lifeInsurance);
         calculation.setFireInsurance(fireInsurance);
+        System.out.println(totalCostService.calculateLifeInsurance(100000000));
 
         // 3. Cálculo de comisión de administración
-        int admiFee = totalCostService.calculateAdmiFee(monthDebth, percentage);
+        int admiFee = totalCostService.calculateAdmiFee(monthDebth);
         calculation.setAdministrationFee(admiFee);
 
         // 4. Cálculo de costos totales y mensuales
         int monthlyCost = totalCostService.monthlyCost(monthDebth, lifeInsurance, fireInsurance);
         calculation.setMonthCost(monthlyCost);
-        int totalCost = totalCostService.totalCost(monthDebth, termInYears, admiFee);
+        int totalCost = totalCostService.totalCost(monthDebth, deadline, admiFee);
         calculation.setTotalCost(totalCost);
 
+        calculationsService.saveCalculation(calculation);
         // Guardar los cambios en la base de datos
         //creditRequestService.updateCreditRequest(calculation); // Asegúrate de que el servicio tenga este método
         return ResponseEntity.ok(calculation); // Retorna el objeto actualizado
