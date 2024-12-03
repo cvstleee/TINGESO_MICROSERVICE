@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CalculationsRepository extends JpaRepository<CalculationsEntity, Long> {
+    CalculationsEntity findByIdCreditRequest(Long idCreditRequest);
 }

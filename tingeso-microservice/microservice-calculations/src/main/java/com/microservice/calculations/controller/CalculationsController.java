@@ -58,6 +58,12 @@ public class CalculationsController {
         return creditSimulationService.simulationDebt(P, r, n);
     }
 
+    @GetMapping("/findByIdCreditRequest/{id}")
+    public ResponseEntity<CalculationsEntity> findByIdCreditRequest(@PathVariable("id") Long id) {
+        CalculationsEntity calculations = calculationsService.findByIdCreditRequest(id);
+        return ResponseEntity.ok(calculations);
+    }
+
     @PostMapping("/calculateTotalCost/{id}")
     public ResponseEntity<CalculationsEntity> calculateTotalCost(
             @PathVariable Long id,

@@ -1,0 +1,39 @@
+.tracking-credit-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #333;
+}
+
+.request-selector {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.details-section,
+.evaluation-section,
+.tracking-section {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+ul {
+    list-style-type: none; /* Eliminar puntos */
+}
+
+ul li {
+    padding: 5px 0;
+}
+
+ul li strong {
+    color: #555; /* Color para las etiquetas */
+}

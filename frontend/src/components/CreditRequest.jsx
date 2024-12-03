@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import costumerService from '../services/costumer.service'; // Asegúrate de que este servicio esté correctamente implementado
+import costumerService from '../services/costumer.service';
 import employeeService from '../services/employee.service';
 import DocumentUpload from './DocumentUpload'; 
 import creditRequestService from '../services/creditRequest.service';
+import './CreditRequest.css'; // Asegúrate de crear este archivo CSS
 
 const CreditRequest = () => {
     const [formData, setFormData] = useState({
@@ -19,7 +20,6 @@ const CreditRequest = () => {
     const [costumers, setCostumers] = useState([]);
     const [employees, setEmployees] = useState([]);
 
-    // Maneja cambios en los inputs
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -29,12 +29,12 @@ const CreditRequest = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Previene la recarga de la página
+        e.preventDefault();
     
         try {
-            const result = await creditRequestService.create(formData); // Llama al servicio create con formData
+            const result = await creditRequestService.create(formData);
             console.log('Solicitud de crédito guardada:', result);
-            setSavedRequest(result.data); // Almacena la solicitud guardada
+            setSavedRequest(result.data);
             setErrorMessage('');
             
         } catch (error) {
@@ -43,7 +43,6 @@ const CreditRequest = () => {
         }
     };
 
-    // Inicializa los datos de clientes y empleados
     const init = async () => {
         try {
             const costumerResponse = await costumerService.getAll();
@@ -58,14 +57,14 @@ const CreditRequest = () => {
     };
 
     useEffect(() => {
-        init(); // Carga los datos al montar el componente
+        init();
     }, []);
 
     return (
-        <div>
+        <div className="credit-request-container">
             <h1>Solicitud de Crédito</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <form onSubmit={handleSubmit} className="credit-request-form">
+                <div className="form-group">
                     <label htmlFor="idCostumer">Cliente:</label>
                     <select 
                         id="idCostumer" 
@@ -76,12 +75,14 @@ const CreditRequest = () => {
                     >
                         <option value="">Seleccione su nombre</option>
                         {costumers.map(costumer => (
-                            <option key={costumer.id} value={costumer.id}>{costumer.name} {costumer.lastName}</option> 
+                            <option key={costumer.id} value={costumer.id}>
+                                {costumer.name} {costumer.lastName}
+                            </option> 
                         ))}
                     </select>
                 </div>
 
-                <div>
+                <div className="form-group">
                     <label htmlFor="idEmployee">Empleado:</label>
                     <select 
                         id="idEmployee" 
@@ -92,12 +93,14 @@ const CreditRequest = () => {
                     >
                         <option value="">Seleccione nombre ejecutivo</option>
                         {employees.map(employee => (
-                            <option key={employee.id} value={employee.id}>{employee.firstName} {employee.lastName}</option> 
+                            <option key={employee.id} value={employee.id}>
+                                {employee.firstName} {employee.lastName}
+                            </option> 
                         ))}
                     </select>
                 </div>
 
-                <div>
+                <div className="form-group">
                     <label htmlFor="type">Tipo:</label>
                     <select 
                         id="type" 
@@ -114,7 +117,7 @@ const CreditRequest = () => {
                     </select>
                 </div>
 
-                <div>
+                <div className="form-group">
                     <label htmlFor="creditAmount">Monto del Préstamo:</label>
                     <input 
                         type="number" 
@@ -126,7 +129,7 @@ const CreditRequest = () => {
                     />
                 </div>
 
-                <div>
+                <div className="form-group">
                     <label htmlFor="deadline">Plazo en Años:</label>
                     <input 
                         type="number" 
@@ -138,7 +141,7 @@ const CreditRequest = () => {
                     />
                 </div>
 
-                <div>
+                <div className="form-group">
                     <label htmlFor="interestRateYear">Tasa de Interés Anual:</label>
                     <input 
                         type="number" 
@@ -146,33 +149,26 @@ const CreditRequest = () => {
                         name="interestRateYear" 
                         value={formData.interestRateYear} 
                         onChange={handleChange} 
-                        step="0.01" // Permite valores decimales
+                        step="0.01"
                         required 
                     />
                 </div>
 
-
-
-                {/* Agrega un botón para enviar */}
-                <button type='submit'>Guardar Solicitud</button>
-
+                <button type='submit' className='submit-button'>Guardar Solicitud</button>
             </form>
 
-            {/* Mostrar mensaje de error si hay uno */}
             {errorMessage && (
-                <p style={{ color: 'red' }}>{errorMessage}</p>
+                <p className='error-message'>{errorMessage}</p>
             )}
 
-            {/* Mostrar información de la solicitud guardada */}
             {savedRequest && (
-                <div>
+                <div className='saved-request'>
                     <h2>Solicitud Guardada:</h2>
                     {Object.entries(savedRequest).map(([key, value]) => (
-                         key !== "documents" && ( // Si no quieres mostrar documentos aquí
+                         key !== "documents" && (
                          <p key={key}><strong>{key}:</strong> {value}</p>)
                      ))}
                     
-                     {/* Aquí se pasa el ID de la solicitud guardada al componente DocumentUpload */}
                      <DocumentUpload idCreditRequest={savedRequest.id} />
                  </div>
              )}

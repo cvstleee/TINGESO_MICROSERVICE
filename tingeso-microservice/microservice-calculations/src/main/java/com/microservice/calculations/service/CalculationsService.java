@@ -35,4 +35,11 @@ public class CalculationsService {
             throw new Exception(e.getMessage());
         }
     }
+
+    //método que me entrega la instancia de calculations que tiene cierta id de creditRequest
+    public  CalculationsEntity findByIdCreditRequest(Long idCreditRequest){
+            CalculationsEntity calculation =  calculationsRepository.findByIdCreditRequest(idCreditRequest);
+            return calculation;
+    }
+
 }

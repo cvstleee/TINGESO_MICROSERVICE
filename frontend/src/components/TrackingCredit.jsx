@@ -3,6 +3,8 @@ import creditRequestService from '../services/creditRequest.service';
 import creditEvaluationService from '../services/creditEvaluation.service';
 import costumerService from '../services/costumer.service';
 import employeeService from '../services/employee.service';
+import trackingService from '../services/tracking.service';
+import './TrackingCredit.css'; 
 
 const TrackingCredit = () => {
     const [creditRequests, setCreditRequests] = useState([]);
@@ -11,8 +13,8 @@ const TrackingCredit = () => {
     const [creditEvaluation, setCreditEvaluation] = useState(null);
     const [customerName, setCustomerName] = useState('');
     const [employeeName, setEmployeeName] = useState('');
+    const [trackingData, setTrackingData] = useState(null);
 
-    // Función para obtener todas las solicitudes de crédito
     const fetchCreditRequests = async () => {
         try {
             const response = await creditRequestService.getAll();
@@ -22,18 +24,16 @@ const TrackingCredit = () => {
         }
     };
 
-    // Función para obtener el creditRequest por ID
     const getCreditRequest = async (id) => {
         try {
             const response = await creditRequestService.get(id);
             setCreditRequest(response.data);
-            fetchCustomerAndEmployee(response.data.idCostumer, response.data.idEmployee); // Obtener cliente y empleado
+            fetchCustomerAndEmployee(response.data.idCostumer, response.data.idEmployee);
         } catch (error) {
             console.error("Error fetching credit request:", error);
         }
     };
 
-    // Función para obtener la creditEvaluation por ID
     const getCreditEvaluation = async (id) => {
         try {
             const response = await creditEvaluationService.get(id);
@@ -43,7 +43,15 @@ const TrackingCredit = () => {
         }
     };
 
-    // Función para obtener el nombre del cliente y del empleado
+    const getTrackingData = async (id) => {
+        try {
+            const response = await trackingService.findByIdCreditRequest(id);
+            setTrackingData(response.data);
+        } catch (error) {
+            console.error("Error fetching tracking data:", error);
+        }
+    };
+
     const fetchCustomerAndEmployee = async (customerId, employeeId) => {
         if (customerId) {
             try {
@@ -67,53 +75,58 @@ const TrackingCredit = () => {
     };
 
     useEffect(() => {
-        fetchCreditRequests(); // Cargar todas las solicitudes al montar el componente
+        fetchCreditRequests();
     }, []);
 
     useEffect(() => {
         if (selectedId) {
-            // Reiniciar estados antes de cargar nueva solicitud
             setCreditRequest(null);
             setCreditEvaluation(null);
             setCustomerName('');
             setEmployeeName('');
+            setTrackingData(null);
 
             getCreditRequest(selectedId);
             getCreditEvaluation(selectedId);
+            getTrackingData(selectedId);
         }
     }, [selectedId]);
 
+    const formatCurrency = (amount) => {
+        return `$${amount.toLocaleString('es-CL')}`;
+    };
+
     return (
-        <div>
+        <div className="tracking-credit-container">
             <h1>Seguimiento de Solicitud de Crédito</h1>
-            <select onChange={(e) => setSelectedId(e.target.value)} value={selectedId || ''}>
+            <select className="request-selector" onChange={(e) => setSelectedId(e.target.value)} value={selectedId || ''}>
                 <option value="" disabled>Seleccione una solicitud</option>
                 {creditRequests.map(request => (
                     <option key={request.id} value={request.id}>
-                        {request.id} - {request.type} {/* Cambia esto según un campo descriptivo */}
+                        {request.id} - {request.type}
                     </option>
                 ))}
             </select>
 
             {creditRequest && (
-                <div>
+                <div className="details-section">
                     <h2>Detalles de la Solicitud de Crédito</h2>
-                   
+                    <ul>
                         <li><strong>ID de Solicitud:</strong> {creditRequest.id}</li>
                         <li><strong>Tipo de Crédito:</strong> {creditRequest.type}</li>
-                        <li><strong>Monto del Crédito:</strong> ${creditRequest.creditAmount.toLocaleString()}</li>
+                        <li><strong>Monto del Crédito:</strong> {formatCurrency(creditRequest.creditAmount)}</li>
                         <li><strong>Plazo:</strong> {creditRequest.deadline} meses</li>
                         <li><strong>Tasa de Interés Anual:</strong> {creditRequest.interestRateYear}%</li>
                         <li><strong>Cliente:</strong> {customerName || 'No disponible'}</li>
                         <li><strong>Empleado:</strong> {employeeName || 'No disponible'}</li>
-                    
+                    </ul>
                 </div>
             )}
 
             {creditEvaluation && (
-                <div>
+                <div className="evaluation-section">
                     <h2>Detalles de la Evaluación de Crédito</h2>
-                    
+                    <ul>
                         <li><strong>ID de Evaluación:</strong> {creditEvaluation.id}</li>
                         <li><strong>Estado:</strong> {creditEvaluation.status}</li>
                         <li><strong>Relación Cuota-Ingreso:</strong> {creditEvaluation.relationshipFeeIncome ? 'Aprobada' : 'No aprobada'}</li>
@@ -123,7 +136,23 @@ const TrackingCredit = () => {
                         <li><strong>Relación Deuda-Ingreso:</strong> {creditEvaluation.relationshipDebtIncome ? 'Aprobada' : 'No aprobada'}</li>
                         <li><strong>Capacidad de Ahorro:</strong> {creditEvaluation.savingsCapacity ? 'Aprobada' : 'No aprobada'}</li>
                         <li><strong>ID de Solicitud de Crédito:</strong> {creditEvaluation.idCreditRequest}</li>
-                   
+                    </ul>
+                </div>
+            )}
+
+            {trackingData && (
+                <div className="tracking-section">
+                    <h2>Costos Totales:</h2>
+                    <ul>
+                        <li><strong>Cargo Administrativo:</strong> {formatCurrency(trackingData.administrationFee)}</li>
+                        <li><strong>Meses de Deuda:</strong> {trackingData.monthDebth}</li>
+                        <li><strong>Costo Mensual:</strong> {formatCurrency(trackingData.monthCost)}</li>
+                        <li><strong>Costo Total:</strong> {formatCurrency(trackingData.totalCost)}</li>
+                        <li><strong>Tasa de Interés Mensual:</strong> {(trackingData.interestRateMonth * 100).toFixed(2)}%</li>
+                        <li><strong>Seguro de Vida:</strong> {formatCurrency(trackingData.lifeInsurance)}</li>
+                        <li><strong>Seguro contra Incendios:</strong> {formatCurrency(trackingData.fireInsurance)}</li>
+                        <li><strong>ID de Solicitud de Crédito:</strong> {trackingData.idCreditRequest}</li>
+                    </ul>
                 </div>
             )}
         </div>
