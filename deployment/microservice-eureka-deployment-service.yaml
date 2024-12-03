@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-eureka-deployment
+  labels:
+    app: microservice-eureka-deployment
+spec:
+  selector:
+    matchLabels:
+      app: microservice-eureka-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: microservice-eureka-deployment
+    spec:
+      containers:
+        - name: microservice-eureka
+          image: cvstleee/microservice-eureka:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://microservice-config:8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice-eureka
+  labels:
+    app: microservice-eureka
+spec:
+  selector:
+    app: microservice-eureka-deployment
+  ports:
+    - protocol: TCP
+      port: 8761
+      targetPort: 8761
+  type: LoadBalancer
