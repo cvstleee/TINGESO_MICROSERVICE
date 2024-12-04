@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: microservice-user-deployment
+  name: microservice-calculations-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: microservice-user-deployment
+      app: microservice-calculations-deployment
   template:
     metadata:
       labels:
-        app: microservice-user-deployment
+        app: microservice-calculations-deployment
     spec:
       containers:
-        - name: microservice-user-container
-          image: cvstleee/microservice-user:latest
+        - name: microservice-calculations-container
+          image: cvstleee/microservice-calculations:latest
           ports:
             - containerPort: 8081
           env:
@@ -29,11 +29,11 @@ spec:
                 configMapKeyRef:
                   name: postgres-config-map
                   key: POSTGRES_DB_HOST
-            - name: POSTGRES_DB_USER
+            - name: POSTGRES_DB_CALCULATIONS
               valueFrom:
                 configMapKeyRef:
                   name: postgres-config-map
-                  key: POSTGRES_DB_USER
+                  key: POSTGRES_DB_CALCULATIONS
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
