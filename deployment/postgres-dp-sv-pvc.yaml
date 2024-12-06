@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/Users/Omen/docker/postgres/docker-pg-vol/data"
+    path: "C:/Users/Omen/docker/postgres/docker-pg-vol/data"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -54,7 +54,7 @@ spec:
             - containerPort: 5432
               name: postgres
           env:
-            # DB for user
+            # DB for user and other databases (consolidated)
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -65,75 +65,34 @@ spec:
                 secretKeyRef:
                   name: postgres-credentials
                   key: POSTGRES_PASSWORD
+
+            # Database names for different purposes (no duplicates)
             - name: POSTGRES_DB_USER
               valueFrom:
                 configMapKeyRef:
                   name: postgres-config-map
                   key: POSTGRES_DB_USER
-            # DB for credit request
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB_CREDITREQUEST
               valueFrom:
                 configMapKeyRef:
                   name: postgres-config-map
                   key: POSTGRES_DB_CREDITREQUEST
-            # DB for credit evaluation
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB_CREDITEVALUATION
               valueFrom:
                 configMapKeyRef:
                   name: postgres-config-map
                   key: POSTGRES_DB_CREDITEVALUATION
-            # DB for calculations
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB_CALCULATIONS
               valueFrom:
                 configMapKeyRef:
                   name: postgres-config-map
                   key: POSTGRES_DB_CALCULATIONS
-            # DB for TRACKING
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB_TRACKING
               valueFrom:
                 configMapKeyRef:
                   name: postgres-config-map
                   key: POSTGRES_DB_TRACKING
+
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: db-data
