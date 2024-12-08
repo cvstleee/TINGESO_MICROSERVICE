@@ -1,0 +1,67 @@
+cd C:\Users\Omen\OneDrive - usach.cl\nivel 6\Técnicas de Ing. de Software\TINGESO_MICROSERVICE\deployment
+
+minikube start
+
+minikube dashboard
+
+ip minikube cluster: 192.168.49.2
+
+COMANDOS:
+minikube start
+//para base de datos
+kubectl apply -f postgres-config-map.yaml
+kubectl apply -f postgres-secrets.yaml
+kubectl apply -f postgres-dp-sv-pvc.yaml
+get pods (para ver si se creo la base de datos)
+kubectl exec -it postgres-5dcd79964c-72p7k -- psql -U postgres
+CREATE DATABASE userprestabancodb;
+CREATE DATABASE creditrequestprestabancodb;
+CREATE DATABASE creditevaluationprestabancodb;
+CREATE DATABASE calculationsprestabancodb;
+CREATE DATABASE trackingprestabancodb;
+\l
+\q para salir
+
+//levantar microservicios en este orden
+kubectl apply -f microservice-config-deployment-service.yaml
+kubectl apply -f microservice-eureka-deployment-service.yaml
+kubectl apply -f microservice-gateway-deployment-service.yaml
+kubectl apply -f microservice-user-deployment-service.yaml
+kubectl apply -f microservice-credit-request-deployment-service.yaml
+kubectl apply -f microservice-credit-evaluation-deployment-service.yaml
+kubectl apply -f microservice-calculations-deployment-service.yaml
+kubectl apply -f microservice-tracking-deployment-service.yaml
+
+kubectl apply -f frontend-deployment-service.yaml
+
+Para acceder  a front usar comando:
+minikube service frontend o minikube service frontend --url
+
+
+kubectl get pods
+kubectl port-forward microservice-gateway-deployment-5744ccb87d-fkszx 8090:8090
+minikube service frontend minikube tunnel
+
+
+PARA ELIMINAR:
+kubectl delete deployments postgres
+kubectl delete configmap postgres-config-map
+kubectl delete services postgres
+kubectl delete pvc postgres-persistent-volume-claim
+
+kubectl delete deployments microservice-gateway-deployment
+kubectl delete deployments microservice-eureka-deployment
+kubectl delete deployments microservice-config-deployment
+kubectl delete service microservice-eureka
+kubectl delete service microservice-gateway
+kubectl delete service microservice-config
+
+kubectl delete deployments microservice-user-deployment
+kubectl delete deployments microservice-credit-request-deployment
+kubectl delete deployments microservice-credit-evaluation-deployment
+kubectl delete deployments microservice-tracking-deployment
+kubectl delete deployments microservice-calculations-deployment
+
+kubectl delete deployments frontend-deployment
+kubectl delete service frontend
+
