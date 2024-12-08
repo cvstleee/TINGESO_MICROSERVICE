@@ -84,7 +84,11 @@ const Calculations = () => {
                 </div>
             )}
 
-            <button onClick={handleCalculate} disabled={!selectedRequest}>
+            <button 
+                onClick={handleCalculate} 
+                disabled={!selectedRequest} 
+                style={{ backgroundColor: 'blue', color: 'white' }}
+            >
                 Calcular Costo Total
             </button>
 
