@@ -12,7 +12,7 @@ minikube start
 kubectl apply -f postgres-config-map.yaml
 kubectl apply -f postgres-secrets.yaml
 kubectl apply -f postgres-dp-sv-pvc.yaml
-get pods (para ver si se creo la base de datos)
+kubectl get pods (para ver si se creo la base de datos)
 kubectl exec -it postgres-5dcd79964c-72p7k -- psql -U postgres
 CREATE DATABASE userprestabancodb;
 CREATE DATABASE creditrequestprestabancodb;
@@ -39,7 +39,7 @@ minikube service frontend o minikube service frontend --url
 
 
 kubectl get pods
-kubectl port-forward microservice-gateway-deployment-5744ccb87d-fkszx 8090:8090
+kubectl port-forward microservice-gateway-deployment-5744ccb87d-fkszx 8080:80
 minikube service frontend minikube tunnel
 
 
@@ -64,4 +64,9 @@ kubectl delete deployments microservice-calculations-deployment
 
 kubectl delete deployments frontend-deployment
 kubectl delete service frontend
+
+Para probar conexiones:
+kubectl exec -it microservice-gateway-deployment-5744ccb87d-dqhm4  -n default -- curl http://microservice-gateway:8080/employee/
+Da lo siguiente:
+[{"id":1,"firstName":"Eduardo","lastName":"Perez","email":"edu@gmail.com","idCreditRequests":[]}]
 
