@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: microservice-creditRequest-deployment
+  name: microservice-credit-request-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: microservice-creditRequest-deployment
+      app: microservice-credit-request-deployment
   template:
     metadata:
       labels:
-        app: microservice-creditRequest-deployment
+        app: microservice-credit-request-deployment
     spec:
       containers:
-        - name: microservice-creditRequest-container
+        - name: microservice-credit-request-container
           image: cvstleee/microservice-creditrequest:latest
           ports:
             - containerPort: 8081

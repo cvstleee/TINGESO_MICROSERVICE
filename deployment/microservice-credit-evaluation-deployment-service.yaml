@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: microservice-creditEvaluation-deployment
+  name: microservice-credit-evaluation-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: microservice-creditEvaluation-deployment
+      app: microservice-credit-evaluation-deployment
   template:
     metadata:
       labels:
-        app: microservice-creditEvaluation-deployment
+        app: microservice-credit-evaluation-deployment
     spec:
       containers:
-        - name: microservice-creditEvaluation-container
+        - name: microservice-credit-evaluation-container
           image: cvstleee/microservice-creditevaluation:latest
           ports:
             - containerPort: 8081
