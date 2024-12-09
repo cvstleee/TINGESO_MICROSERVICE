@@ -34,12 +34,8 @@ kubectl apply -f microservice-tracking-deployment-service.yaml
 
 kubectl apply -f frontend-deployment-service.yaml
 
-Para acceder  a front usar comando:
-minikube service frontend o minikube service frontend --url
-
-
 kubectl get pods
-kubectl port-forward microservice-gateway-deployment-5744ccb87d-fkszx 8080:80
+kubectl port-forward microservice-gateway-deployment-5744ccb87d-fkszx 8080:8080
 minikube service frontend minikube tunnel
 
 
@@ -47,6 +43,7 @@ PARA ELIMINAR:
 kubectl delete deployments postgres
 kubectl delete configmap postgres-config-map
 kubectl delete services postgres
+//si borro esto borro la data
 kubectl delete pvc postgres-persistent-volume-claim
 
 kubectl delete deployments microservice-gateway-deployment
